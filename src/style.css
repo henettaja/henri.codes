@@ -1,0 +1,131 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  --gradient-light: linear-gradient(75deg, #8e7ceb, #ffbcc3, #ffcf6e);
+  --gradient-dark: linear-gradient(75deg, #6174d0, #a45d56, #d38bb0);
+
+  --gradient-animation-speed: 30s;
+  --marquee-animation-speed: 30s;
+  --marquee-animation-delay: calc(var(--marquee-animation-speed) / 2);
+
+  --bg-light: #fff2f2;
+  --bg-lighter: #fff2f2;
+  --bg-dark: #171a24;
+  --bg-dark-translucent: rgb(23, 26, 36, .55);
+  --bg-darker: #171a24;
+  --text-light: #9b5c65;
+  --text-lighter: #75373f;
+  --text-dark: #b1b8cc;
+  --text-darker: #8b93ac;
+}
+
+@keyframes bg-animation {
+  0% {
+    background-position: left;
+  }
+  50% {
+    background-position: right;
+  }
+  100% {
+    background-position: left;
+  }
+}
+
+@keyframes move {
+  0% {
+    transform: translateX(-0%);
+  }
+  100% {
+    transform: translateX(-220%);
+  }
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+
+  background-image: var(--gradient-light);
+  animation: bg-animation var(--gradient-animation-speed) linear infinite;
+  background-size: 300%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-light);
+}
+
+.box {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+}
+
+a {
+  color: var(--text-lighter);
+  font-weight: bolder;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  color: color-mix(in srgb, var(--text-light) 10%, white);
+}
+
+a:visited {
+  color: var(--text-light);
+}
+
+
+@media (prefers-color-scheme: dark) {
+  main {
+    background-image: var(--gradient-dark);
+    animation: bg-animation var(--gradient-animation-speed) linear infinite;
+    background-size: 300%;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--bg-dark);
+  }
+
+  .box > h1, h2, h3, h4, h5, h6 {
+    color: var(--text-darker);
+  }
+
+  .box {
+    background-color: var(--bg-dark);
+    color: var(--text-darker);
+  }
+
+  a {
+    color: var(--text-dark);
+    font-weight: bolder;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  a:active {
+    color: var(--text-dark);
+  }
+
+  a:visited {
+    color: var(--text-dark);
+  }
+}
