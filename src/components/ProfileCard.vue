@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
-defineProps<{ msg: string }>()
-
-const count = ref(0)
 </script>
 
 <template>
@@ -37,7 +32,7 @@ const count = ref(0)
       flex-direction: column;
       gap: 0.5rem;
       max-width: 30rem;
-      
+
       border-radius: 1rem;
 
       padding: 1rem 2rem;
