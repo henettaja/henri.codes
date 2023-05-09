@@ -13,6 +13,10 @@
       line-height: 1;
       font-size: 10rem;
       color: var(--text-light);
+
+      > * {
+          user-select: none;
+      }
   }
 
   h1#first {
