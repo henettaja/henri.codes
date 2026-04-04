@@ -1,125 +1,170 @@
 <script setup lang="ts">
 import TypedIntro from './components/TypedIntro.vue'
+import { ref } from 'vue'
+import heroDithered from './assets/hero-portrait.png'
+
+const activeTab = ref('about')
+
+const textSections = [
+  {
+    id: 'about',
+    label: './about',
+    title: '',
+    body: '',
+    details: [
+      ['profile', 'full-stack developer specialized in frontend'],
+      ['tech', 'TypeScript-based stacks'],
+      ['location', 'Helsinki'],
+    ],
+  },
+  {
+    id: 'work',
+    label: './work.txt',
+    title: '',
+    body: 'I enjoy modern monorepositories, declarative, reactive and functional paradigms, and projects that aim to leave the world better than they found it.',
+    details: [],
+  },
+  {
+    id: 'approach',
+    label: './approach.txt',
+    title: '',
+    body: 'I like working with teams that make calculated decisions based on open discussion, even friendly debate.',
+    details: [],
+  },
+] as const
 
 const profileLinks = [
   {
     href: 'https://www.linkedin.com/in/henrivaisanen/',
     label: 'LinkedIn',
-    description: 'Professional background and current work',
+    note: 'professional',
+    kind: 'primary',
   },
   {
     href: 'https://github.com/henettaja',
     label: 'GitHub',
-    description: 'Code, experiments, and things worth building carefully',
+    note: 'code',
+    kind: 'primary',
   },
   {
     href: 'https://open.spotify.com/user/henettaja',
     label: 'Spotify',
-    description: 'What is currently in rotation',
+    note: 'currently playing',
+    kind: 'personal',
   },
   {
     href: 'https://instagram.com/henettaja',
     label: 'Instagram',
-    description: 'A less technical corner of the internet',
+    note: 'offline traces',
+    kind: 'personal',
   },
 ]
 </script>
 
 <template>
   <main class="page-shell">
-    <svg class="visual-filter-defs" aria-hidden="true" focusable="false">
-      <filter id="binary-threshold">
-        <feColorMatrix type="saturate" values="0" />
-        <feComponentTransfer color-interpolation-filters="sRGB">
-          <feFuncR type="gamma" amplitude="1.15" exponent="1.1" offset="0" />
-          <feFuncG type="gamma" amplitude="1.15" exponent="1.1" offset="0" />
-          <feFuncB type="gamma" amplitude="1.15" exponent="1.1" offset="0" />
-        </feComponentTransfer>
-        <feComponentTransfer color-interpolation-filters="sRGB">
-          <feFuncR type="discrete" tableValues="0 1" />
-          <feFuncG type="discrete" tableValues="0 1" />
-          <feFuncB type="discrete" tableValues="0 1" />
-        </feComponentTransfer>
-      </filter>
-    </svg>
-
     <section class="hero" aria-labelledby="intro-title">
-      <p class="hero-kicker">$ ./henri.codes</p>
-      <TypedIntro
-        id="intro-title"
-        class="hero-title"
-        text="Hello, I'm Henri Vaisanen."
-      />
-      <p class="hero-summary">
-        I write code I can stand behind, for causes I can stand behind.
-      </p>
-      <p class="hero-meta">
-        Full-stack software developer at Tieto. Frontend-specialized. Based in
-        Helsinki, Finland.
-      </p>
+      <div class="hero-portrait">
+        <div class="portrait-frame hero-portrait-frame">
+          <img
+            class="portrait-image"
+            :src="heroDithered"
+            alt="Portrait of Henri Vaisanen"
+          />
+        </div>
+      </div>
+
+      <div class="hero-copy">
+        <div class="hero-prompt">
+          <span class="prompt-path">henri.codes</span>
+          <span class="prompt-connector">on</span>
+          <span class="prompt-branch">main</span>
+        </div>
+        <div class="hero-command">
+          <span class="prompt-glyph">❯</span>
+          <TypedIntro
+            id="intro-title"
+            class="hero-title"
+            text="hello world!"
+          />
+        </div>
+      </div>
     </section>
 
-    <section class="content-grid" aria-label="Introduction">
-      <article class="content-section content-section-wide" aria-labelledby="about-title">
-        <div class="section-copy">
-          <p class="section-label">About</p>
-          <h2 id="about-title">Who I am</h2>
-          <p>
-            I build software with a frontend bias, a full-stack toolkit, and a
-            preference for TypeScript-heavy environments where product quality
-            and code quality are treated as the same conversation.
-          </p>
+    <section class="content-area" aria-labelledby="info-title">
+      <div class="section-copy content-heading">
+        <h2 id="info-title">henri_väisänen</h2>
+        <p>I write code I can stand behind, for causes I can stand behind.</p>
+      </div>
+
+      <div class="content-grid" aria-label="Introduction">
+        <article class="content-section content-tabs">
+
+        <div class="tab-list" role="tablist" aria-label="Profile sections">
+          <button
+            v-for="section in textSections"
+            :key="section.id"
+            :class="['tab-button', { active: activeTab === section.id }]"
+            :aria-selected="activeTab === section.id"
+            :tabindex="activeTab === section.id ? 0 : -1"
+            role="tab"
+            type="button"
+            @click="activeTab = section.id"
+          >
+            {{ section.label }}
+          </button>
         </div>
 
-        <figure class="portrait-panel">
-          <div class="portrait-frame">
-            <img
-              class="portrait-image"
-              src="./assets/me.jpg"
-              alt="Portrait of Henri Vaisanen"
-            />
+        <div
+          v-for="section in textSections"
+          v-show="activeTab === section.id"
+          :key="section.id"
+          class="tab-panel"
+          role="tabpanel"
+        >
+          <h3>{{ section.title }}</h3>
+          <div v-if="section.details.length" class="detail-tree" aria-label="Details">
+            <ul class="detail-list">
+              <li
+                v-for="([term, description], index) in section.details"
+                :key="term"
+              >
+                <span class="detail-branch" aria-hidden="true">
+                  {{ index === section.details.length - 1 ? '└─' : '├─' }}
+                </span>
+                <dl class="detail-entry">
+                  <dt>{{ term }}</dt>
+                  <dd>{{ description }}</dd>
+                </dl>
+              </li>
+            </ul>
           </div>
-          <figcaption>
-            Rendered as a high-contrast trace instead of a polished headshot.
-          </figcaption>
-        </figure>
-      </article>
+          <p>{{ section.body }}</p>
+        </div>
+        </article>
 
-      <article class="content-section" aria-labelledby="work-title">
-        <p class="section-label">What I do</p>
-        <h2 id="work-title">How I spend my time</h2>
-        <p>
-          I enjoy working with people, modern monorepositories, declarative and
-          reactive paradigms, and projects that aim to leave the world in a
-          better state than they found it.
-        </p>
-      </article>
-
-      <article class="content-section" aria-labelledby="approach-title">
-        <p class="section-label">How I work</p>
-        <h2 id="approach-title">What matters to me</h2>
-        <p>
-          Calculated decisions, open discussion, and friendly debate. I care
-          about code that scales, accessibility as a baseline, and quality that
-          reaches beyond implementation alone.
-        </p>
-      </article>
-
-      <article class="content-section" aria-labelledby="links-title">
-        <p class="section-label">Links</p>
-        <h2 id="links-title">Where to find me</h2>
-        <p>
-          You can find my work, interests, and a few non-code breadcrumbs here.
-        </p>
-        <ul class="link-list">
-          <li v-for="link in profileLinks" :key="link.href">
-            <a :href="link.href" target="_blank" rel="noreferrer">
-              <span>{{ link.label }}</span>
-              <span>{{ link.description }}</span>
-            </a>
-          </li>
-        </ul>
-      </article>
+        <aside class="content-section links-panel" aria-labelledby="links-title">
+          <h2 id="links-title">./elsewhere</h2>
+        <div class="link-tree" aria-label="Links">
+          <ul class="link-list">
+            <li v-for="(link, index) in profileLinks" :key="link.href">
+              <span class="link-branch" aria-hidden="true">
+                {{ index === profileLinks.length - 1 ? '└─' : '├─' }}
+              </span>
+              <a
+                :href="link.href"
+                target="_blank"
+                rel="noreferrer"
+                :class="['link-item', `link-item-${link.kind}`]"
+              >
+                <span class="link-label">{{ link.label }}</span>
+                <span class="link-note">{{ link.note }}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        </aside>
+      </div>
     </section>
   </main>
 </template>
@@ -129,105 +174,211 @@ const profileLinks = [
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 5rem;
-  width: min(1120px, calc(100% - 2rem));
+  gap: 6rem;
+  width: min(147.5rem, calc(100% - 6rem));
   margin: 0 auto;
-  padding: 2rem 0 5rem;
+  padding: 4.5rem 0 5rem;
 }
 
 .hero {
   display: grid;
-  align-content: center;
-  min-height: 100vh;
-  gap: 1.5rem;
-  padding: 4rem 0 2rem;
+  align-items: center;
+  gap: 4rem;
+  padding: 1.25rem 0 0.75rem;
 }
 
-.hero-kicker,
+.hero-portrait {
+  display: flex;
+}
+
+.hero-portrait-frame {
+  width: min(100%, 22.5rem);
+}
+
+.hero-copy {
+  display: grid;
+  gap: 0.5rem;
+  align-content: center;
+}
+
+.hero-prompt {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 2rem;
+  user-select: none;
+}
+
+.hero-command {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 2rem;
+  user-select: none;
+}
+
 .section-label {
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: var(--text-muted);
-  font-size: 0.82rem;
+  font-size: 1.75rem;
+}
+
+.prompt-glyph {
+  display: inline-block;
+  width: 1ch;
+  color: var(--prompt-glyph);
+}
+
+.prompt-path {
+  color: var(--prompt-path);
+}
+
+.prompt-connector {
+  color: var(--text-muted);
+}
+
+.prompt-branch {
+  color: var(--prompt-branch);
 }
 
 .hero-title {
-  max-width: 12ch;
-  font-size: clamp(3.5rem, 10vw, 8rem);
-  line-height: 0.9;
+  font-size: 2rem;
+  line-height: 1.1;
+  text-transform: lowercase;
 }
 
-.hero-summary {
-  max-width: 42rem;
-  font-size: clamp(1.05rem, 2vw, 1.3rem);
-  color: var(--text-primary);
-}
-
-.hero-meta {
-  max-width: 38rem;
-  color: var(--text-muted);
+@media (min-width: 500px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
 }
 
 .content-grid {
   display: grid;
-  gap: 1.25rem;
+  gap: 4rem;
+}
+
+.content-area {
+  display: grid;
+  gap: 2rem;
 }
 
 .content-section {
   display: grid;
-  gap: 1rem;
-  padding: 1.5rem;
-  border: 1px solid var(--panel-border);
-  background: var(--panel-bg);
-  box-shadow: 0 0 0 1px var(--panel-shadow) inset;
-  backdrop-filter: blur(6px);
-}
-
-.content-section-wide {
   gap: 1.5rem;
+  padding: 0;
 }
 
 .section-copy {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
-.portrait-panel {
+.content-tabs {
+  align-content: start;
+}
+
+.tab-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.tab-button {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0.25rem 0;
+  min-height: 0;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    text-decoration-color 140ms ease;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.25em;
+}
+
+.tab-button:hover,
+.tab-button:focus-visible,
+.tab-button.active {
+  color: var(--text-primary);
+  text-decoration-color: currentColor;
+}
+
+.tab-panel {
   display: grid;
-  gap: 0.75rem;
+  gap: 1rem;
+  min-height: 14rem;
+  align-content: start;
+}
+
+.detail-tree {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.detail-list {
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.detail-list li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  align-items: start;
+  column-gap: 0.75rem;
+}
+
+.detail-branch {
+  color: var(--text-muted);
+  width: 2.5rem;
+  flex: 0 0 auto;
+}
+
+.detail-entry {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 3rem;
+  margin: 0;
+  min-width: 0;
+}
+
+.detail-entry dt {
+  color: var(--text-muted);
+}
+
+.detail-entry dd {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.link-tree {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.link-tree-title {
+  color: var(--text-muted);
 }
 
 .portrait-frame {
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--panel-border-strong);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.12),
-      rgba(255, 255, 255, 0) 45%
-    ),
-    #050505;
-}
-
-.portrait-frame::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 8px 8px;
-  mix-blend-mode: soft-light;
-  opacity: 0.3;
-  pointer-events: none;
+  background: transparent;
 }
 
 .portrait-image {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 0.86;
   object-fit: cover;
-  filter: url(#binary-threshold);
+  object-position: center top;
   image-rendering: pixelated;
 }
 
@@ -236,57 +387,109 @@ const profileLinks = [
   gap: 1rem;
   list-style: none;
   padding: 0;
+  margin: 0;
+}
+
+.link-list li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  align-items: start;
+  column-gap: 0.75rem;
+}
+
+.link-branch {
+  color: var(--text-muted);
+  width: 2.5rem;
+  flex: 0 0 auto;
 }
 
 .link-list a {
-  display: grid;
-  gap: 0.2rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid transparent;
-  background: var(--bg-elevated);
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 0;
+  padding: 0;
   transition:
-    border-color 140ms ease,
-    background-color 140ms ease,
-    transform 140ms ease;
+    color 140ms ease;
+  color: var(--text-primary);
+  gap: 0.75rem;
+  min-width: 0;
 }
 
 .link-list a:hover,
 .link-list a:focus-visible {
-  border-color: var(--panel-border-strong);
-  background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-1px);
-}
-
-.link-list span:last-child,
-.portrait-panel figcaption {
   color: var(--text-muted);
 }
 
-.content-section :deep(h2) {
-  font-size: clamp(1.4rem, 3vw, 1.8rem);
+.link-item-personal:hover .link-label,
+.link-item-personal:focus-visible .link-label {
+  color: var(--text-muted);
 }
 
-.visual-filter-defs {
-  position: absolute;
-  width: 0;
-  height: 0;
+.link-item-personal:hover .link-note,
+.link-item-personal:focus-visible .link-note {
+  color: var(--text-primary);
 }
 
-@media (min-width: 820px) {
+.link-label {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 0.25em;
+}
+
+.link-note {
+  color: var(--text-muted);
+  font-size: 1.5rem;
+}
+
+.link-item-personal .link-label {
+  color: var(--text-primary);
+}
+
+.link-item-personal .link-note {
+  color: var(--prompt-glyph);
+}
+
+.content-section :deep(h2),
+.tab-panel h3 {
+  font-size: 2.5rem;
+}
+
+@media (min-width: 500px) {
+  .hero {
+    grid-template-columns: minmax(16.25rem, 23.75rem) minmax(0, 1fr);
+    gap: 5rem;
+    padding: 2.5rem 0 1.5rem;
+    min-height: 42vh;
+  }
+
+  .hero-portrait {
+    justify-content: flex-start;
+  }
+
+  .hero-portrait-frame {
+    width: min(100%, 26.25rem);
+  }
+
+  .hero-copy {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 800px) {
   .page-shell {
-    gap: 6rem;
-    width: min(1120px, calc(100% - 4rem));
+    gap: 5rem;
+    width: min(147.5rem, calc(100% - 12rem));
   }
 
   .content-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) minmax(26rem, 34rem);
     align-items: start;
   }
 
-  .content-section-wide {
-    grid-column: 1 / -1;
-    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-    align-items: center;
+  .links-panel {
+    align-content: start;
+    min-width: 0;
   }
 }
 </style>
