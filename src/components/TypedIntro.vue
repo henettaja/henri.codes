@@ -17,6 +17,8 @@ const finishTyping = () => {
   isComplete.value = true
 }
 
+const animationLength = 200
+
 onMounted(() => {
   const prefersReducedMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)'
@@ -41,7 +43,7 @@ onMounted(() => {
       timerId = null
       isComplete.value = true
     }
-  }, 95)
+  }, animationLength)
 })
 
 onBeforeUnmount(() => {
