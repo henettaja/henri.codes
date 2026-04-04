@@ -5,12 +5,22 @@ const profileLinks = [
   {
     href: 'https://www.linkedin.com/in/henrivaisanen/',
     label: 'LinkedIn',
-    description: 'Professional profile and current experience',
+    description: 'Professional background and current work',
   },
   {
     href: 'https://github.com/henettaja',
     label: 'GitHub',
-    description: 'Projects, experiments, and what I am learning next',
+    description: 'Code, experiments, and things worth building carefully',
+  },
+  {
+    href: 'https://open.spotify.com/user/henettaja',
+    label: 'Spotify',
+    description: 'What is currently in rotation',
+  },
+  {
+    href: 'https://instagram.com/henettaja',
+    label: 'Instagram',
+    description: 'A less technical corner of the internet',
   },
 ]
 </script>
@@ -41,8 +51,11 @@ const profileLinks = [
         text="Hello, I'm Henri Vaisanen."
       />
       <p class="hero-summary">
-        Software developer and consultant in Helsinki, focused on TypeScript,
-        clear interfaces, and software that feels good to use.
+        I write code I can stand behind, for causes I can stand behind.
+      </p>
+      <p class="hero-meta">
+        Full-stack software developer at Tieto. Frontend-specialized. Based in
+        Helsinki, Finland.
       </p>
     </section>
 
@@ -52,9 +65,9 @@ const profileLinks = [
           <p class="section-label">About</p>
           <h2 id="about-title">Who I am</h2>
           <p>
-            I work as a software developer consultant and enjoy building
-            products where the implementation stays understandable and the
-            experience feels intentional from the first interaction onward.
+            I build software with a frontend bias, a full-stack toolkit, and a
+            preference for TypeScript-heavy environments where product quality
+            and code quality are treated as the same conversation.
           </p>
         </div>
 
@@ -76,9 +89,9 @@ const profileLinks = [
         <p class="section-label">What I do</p>
         <h2 id="work-title">How I spend my time</h2>
         <p>
-          I gravitate toward TypeScript-based stacks, declarative and reactive
-          ways of building software, and frontend work where product thinking is
-          as important as implementation detail.
+          I enjoy working with people, modern monorepositories, declarative and
+          reactive paradigms, and projects that aim to leave the world in a
+          better state than they found it.
         </p>
       </article>
 
@@ -86,9 +99,9 @@ const profileLinks = [
         <p class="section-label">How I work</p>
         <h2 id="approach-title">What matters to me</h2>
         <p>
-          I care about clarity, accessibility, and UX details that make software
-          easier to understand, easier to maintain, and more pleasant for the
-          people using it every day.
+          Calculated decisions, open discussion, and friendly debate. I care
+          about code that scales, accessibility as a baseline, and quality that
+          reaches beyond implementation alone.
         </p>
       </article>
 
@@ -96,8 +109,7 @@ const profileLinks = [
         <p class="section-label">Links</p>
         <h2 id="links-title">Where to find me</h2>
         <p>
-          The best places to follow what I build, study, and think about are
-          here.
+          You can find my work, interests, and a few non-code breadcrumbs here.
         </p>
         <ul class="link-list">
           <li v-for="link in profileLinks" :key="link.href">
@@ -135,6 +147,8 @@ const profileLinks = [
 .section-label {
   text-transform: uppercase;
   letter-spacing: 0.16em;
+  color: var(--text-muted);
+  font-size: 0.82rem;
 }
 
 .hero-title {
@@ -146,6 +160,12 @@ const profileLinks = [
 .hero-summary {
   max-width: 42rem;
   font-size: clamp(1.05rem, 2vw, 1.3rem);
+  color: var(--text-primary);
+}
+
+.hero-meta {
+  max-width: 38rem;
+  color: var(--text-muted);
 }
 
 .content-grid {
@@ -160,6 +180,7 @@ const profileLinks = [
   border: 1px solid var(--panel-border);
   background: var(--panel-bg);
   box-shadow: 0 0 0 1px var(--panel-shadow) inset;
+  backdrop-filter: blur(6px);
 }
 
 .content-section-wide {
@@ -220,11 +241,29 @@ const profileLinks = [
 .link-list a {
   display: grid;
   gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid transparent;
+  background: var(--bg-elevated);
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease,
+    transform 140ms ease;
+}
+
+.link-list a:hover,
+.link-list a:focus-visible {
+  border-color: var(--panel-border-strong);
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
 }
 
 .link-list span:last-child,
 .portrait-panel figcaption {
   color: var(--text-muted);
+}
+
+.content-section :deep(h2) {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
 }
 
 .visual-filter-defs {
@@ -236,6 +275,7 @@ const profileLinks = [
 @media (min-width: 820px) {
   .page-shell {
     gap: 6rem;
+    width: min(1120px, calc(100% - 4rem));
   }
 
   .content-grid {
