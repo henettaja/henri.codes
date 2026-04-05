@@ -338,7 +338,7 @@ const profileLinks = [
 }
 
 .identity-section-title {
-  color: var(--text-primary);
+  color: var(--text-muted);
   font-size: 1.75rem;
   font-weight: 500;
 }
@@ -366,7 +366,7 @@ const profileLinks = [
   transform: translateY(-50%);
   padding: 0 0.75rem;
   background: var(--bg);
-  color: var(--text-muted);
+  color: var(--prompt-path);
   line-height: 1;
 }
 

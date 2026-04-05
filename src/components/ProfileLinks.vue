@@ -44,6 +44,11 @@ defineProps<{
   padding: 0;
 }
 
+#links-title {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
 .link-tree {
   margin-top: 1rem;
 }
@@ -84,7 +89,7 @@ defineProps<{
 }
 
 .link-item-personal .link-note {
-  color: var(--prompt-glyph);
+  color: var(--prompt-branch);
 }
 
 .link-item-primary .link-note {

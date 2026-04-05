@@ -77,7 +77,11 @@ const emit = defineEmits<{
 }
 
 .tab-button:hover,
-.tab-button:focus-visible,
+.tab-button:focus-visible {
+  color: var(--text-primary);
+  text-decoration-color: currentColor;
+}
+
 .tab-button.active {
   color: var(--text-primary);
   text-decoration-color: currentColor;
