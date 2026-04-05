@@ -32,7 +32,7 @@ const sectionsByMode = {
         body: '',
         details: [
           ['profile', 'frontend focused full-stack developer'],
-          ['tech', 'TypeScript-based stacks'],
+          ['focus', 'TypeScript-based stacks'],
           ['location', 'Helsinki'],
         ],
       },
@@ -61,7 +61,7 @@ const sectionsByMode = {
         body: '',
         details: [
           ['profile', 'frontend focused full-stack developer'],
-          ['focus', 'shipping reliable TypeScript products'],
+          ['focus', 'TypeScript-based stacks'],
           ['location', 'Helsinki'],
         ],
       },
