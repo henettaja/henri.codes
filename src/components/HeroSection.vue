@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
     <div class="hero-copy-stage">
       <div class="hero-copy hero-copy-init" :class="{ 'is-hidden': isReady }">
         <HeroPromptSegments />
-        <div class="command-stage" :class="{ 'has-second-line': isProcessing }">
+        <div class="command-stage" :class="{ 'has-second-line': isProcessing || isReady }">
           <div class="hero-command">
             <span class="prompt-glyph">❯</span>
             <TypedIntro
@@ -113,10 +113,10 @@ onBeforeUnmount(() => {
           </div>
           <div
             class="hero-command command-slot-secondary"
-            :class="{ visible: isProcessing }"
+            :class="{ visible: isProcessing || isReady }"
           >
             <span
-              v-if="isProcessing"
+              v-if="isProcessing || isReady"
               class="processing-dots"
               aria-hidden="true"
             >
@@ -199,7 +199,7 @@ onBeforeUnmount(() => {
 .hero-copy {
   display: grid;
   gap: 0.5rem;
-  align-content: center;
+  align-content: start;
   box-sizing: border-box;
   padding-left: var(--content-inset);
 }
