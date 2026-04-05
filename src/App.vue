@@ -94,13 +94,13 @@ const profileLinks = [
     href: 'https://open.spotify.com/user/henettaja',
     label: 'Spotify',
     note: 'currently playing',
-    kind: 'personal',
+    kind: 'spotify',
   },
   {
     href: 'https://instagram.com/henettaja',
     label: 'Instagram',
     note: 'offline traces',
-    kind: 'personal',
+    kind: 'instagram',
   },
 ]
 </script>
