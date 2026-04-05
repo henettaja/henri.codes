@@ -3,35 +3,82 @@ import { ref } from 'vue'
 import heroDithered from './assets/hero-portrait.png'
 import TypedIntro from './components/TypedIntro.vue'
 
-const activeTab = ref('about')
+type ProfileMode = 'dev' | 'human'
 
-const textSections = [
+const activeTab = ref('about')
+const activeMode = ref<ProfileMode>('dev')
+
+const modeOptions = [
   {
-    id: 'about',
-    label: './about',
-    title: '',
-    body: '',
-    details: [
-      ['profile', 'full-stack developer specialized in frontend'],
-      ['tech', 'TypeScript-based stacks'],
-      ['location', 'Helsinki'],
-    ],
+    id: 'dev',
+    label: 'dev',
   },
   {
-    id: 'work',
-    label: './work.txt',
-    title: '',
-    body: 'I enjoy modern monorepositories, declarative, reactive and functional paradigms, and projects that aim to leave the world better than they found it.',
-    details: [],
-  },
-  {
-    id: 'approach',
-    label: './approach.txt',
-    title: '',
-    body: 'I like working with teams that make calculated decisions based on open discussion, even friendly debate.',
-    details: [],
+    id: 'human',
+    label: 'human',
   },
 ] as const
+
+const sectionsByMode = {
+  dev: {
+    sections: [
+      {
+        id: 'about',
+        label: './about',
+        title: '',
+        body: '',
+        details: [
+          ['profile', 'frontend focused full-stack developer'],
+          ['tech', 'TypeScript-based stacks'],
+          ['location', 'Helsinki'],
+        ],
+      },
+      {
+        id: 'work',
+        label: './work.txt',
+        title: '',
+        body: 'I enjoy modern monorepositories, declarative, reactive and functional paradigms, and projects that aim to leave the world better than they found it.',
+        details: [],
+      },
+      {
+        id: 'approach',
+        label: './approach.txt',
+        title: '',
+        body: 'I like working with teams that make calculated decisions based on open discussion, even friendly debate.',
+        details: [],
+      },
+    ],
+  },
+  human: {
+    sections: [
+      {
+        id: 'about',
+        label: './about',
+        title: '',
+        body: '',
+        details: [
+          ['profile', 'frontend focused full-stack developer'],
+          ['focus', 'shipping reliable TypeScript products'],
+          ['location', 'Helsinki'],
+        ],
+      },
+      {
+        id: 'work',
+        label: './work.txt',
+        title: '',
+        body: 'I work best in teams that trust engineers with real ownership: shaping solutions, building client-facing products, and carrying ideas into production with a high bar for quality.',
+        details: [],
+      },
+      {
+        id: 'approach',
+        label: './approach.txt',
+        title: '',
+        body: 'My approach is direct and accountable. I value clear communication, thoughtful technical decisions, and software that improves the experience for both users and the people maintaining it.',
+        details: [],
+      },
+    ],
+  },
+} as const
 
 const profileLinks = [
   {
@@ -95,6 +142,22 @@ const profileLinks = [
       <div class="section-copy content-heading">
         <h2 id="info-title">henri_väisänen</h2>
         <p>I write code I can stand behind, for causes I can stand behind.</p>
+        <div class="mode-switcher" role="group" aria-label="Language mode">
+          <span class="mode-switcher-label">lang:</span>
+          <button
+            v-for="(mode, index) in modeOptions"
+            :key="mode.id"
+            type="button"
+            :class="['mode-button', { active: activeMode === mode.id }]"
+            :aria-pressed="activeMode === mode.id"
+            @click="activeMode = mode.id"
+          >
+            <span>{{ mode.label }}</span>
+            <span v-if="index < modeOptions.length - 1" class="mode-divider" aria-hidden="true">
+              |
+            </span>
+          </button>
+        </div>
       </div>
 
       <div class="content-grid" aria-label="Introduction">
@@ -102,7 +165,7 @@ const profileLinks = [
 
         <div class="tab-list" role="tablist" aria-label="Profile sections">
           <button
-            v-for="section in textSections"
+            v-for="section in sectionsByMode[activeMode].sections"
             :key="section.id"
             :class="['tab-button', { active: activeTab === section.id }]"
             :aria-selected="activeTab === section.id"
@@ -116,7 +179,7 @@ const profileLinks = [
         </div>
 
         <div
-          v-for="section in textSections"
+          v-for="section in sectionsByMode[activeMode].sections"
           v-show="activeTab === section.id"
           :key="section.id"
           class="tab-panel"
@@ -277,6 +340,40 @@ const profileLinks = [
 
 .content-tabs {
   align-content: start;
+}
+
+.mode-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-muted);
+}
+
+.mode-switcher-label {
+  color: var(--text-muted);
+}
+
+.mode-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 140ms ease;
+}
+
+.mode-button:hover,
+.mode-button:focus-visible,
+.mode-button.active {
+  color: var(--text-primary);
+}
+
+.mode-divider {
+  color: var(--text-muted);
 }
 
 .tab-list {
