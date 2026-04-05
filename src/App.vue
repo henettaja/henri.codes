@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import heroDithered from './assets/hero-portrait.png'
+import ProfileLinks from './components/ProfileLinks.vue'
+import ProfileModeSwitcher from './components/ProfileModeSwitcher.vue'
 import TypedIntro from './components/TypedIntro.vue'
 
 type ProfileMode = 'dev' | 'human'
@@ -142,22 +144,11 @@ const profileLinks = [
       <div class="section-copy content-heading">
         <h2 id="info-title">henri_väisänen</h2>
         <p>I write code I can stand behind, for causes I can stand behind.</p>
-        <div class="mode-switcher" role="group" aria-label="Language mode">
-          <span class="mode-switcher-label">lang:</span>
-          <button
-            v-for="(mode, index) in modeOptions"
-            :key="mode.id"
-            type="button"
-            :class="['mode-button', { active: activeMode === mode.id }]"
-            :aria-pressed="activeMode === mode.id"
-            @click="activeMode = mode.id"
-          >
-            <span>{{ mode.label }}</span>
-            <span v-if="index < modeOptions.length - 1" class="mode-divider" aria-hidden="true">
-              |
-            </span>
-          </button>
-        </div>
+        <ProfileModeSwitcher
+          :active-mode="activeMode"
+          :mode-options="modeOptions"
+          @update:active-mode="activeMode = $event"
+        />
       </div>
 
       <div class="content-grid" aria-label="Introduction">
@@ -206,27 +197,7 @@ const profileLinks = [
         </div>
         </article>
 
-        <aside class="content-section links-panel" aria-labelledby="links-title">
-          <h2 id="links-title">./elsewhere</h2>
-        <div class="link-tree" aria-label="Links">
-          <ul class="link-list">
-            <li v-for="(link, index) in profileLinks" :key="link.href">
-              <span class="link-branch" aria-hidden="true">
-                {{ index === profileLinks.length - 1 ? '└─' : '├─' }}
-              </span>
-              <a
-                :href="link.href"
-                target="_blank"
-                rel="noreferrer"
-                :class="['link-item', `link-item-${link.kind}`]"
-              >
-                <span class="link-label">{{ link.label }}</span>
-                <span class="link-note">{{ link.note }}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-        </aside>
+        <ProfileLinks :links="profileLinks" />
       </div>
     </section>
   </main>
@@ -342,40 +313,6 @@ const profileLinks = [
   align-content: start;
 }
 
-.mode-switcher {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--text-muted);
-}
-
-.mode-switcher-label {
-  color: var(--text-muted);
-}
-
-.mode-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color 140ms ease;
-}
-
-.mode-button:hover,
-.mode-button:focus-visible,
-.mode-button.active {
-  color: var(--text-primary);
-}
-
-.mode-divider {
-  color: var(--text-muted);
-}
-
 .tab-list {
   display: flex;
   flex-wrap: wrap;
@@ -455,16 +392,6 @@ const profileLinks = [
   color: var(--text-primary);
 }
 
-.link-tree {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.link-tree-title {
-  color: var(--text-muted);
-}
-
 .portrait-frame {
   position: relative;
   overflow: hidden;
@@ -477,74 +404,6 @@ const profileLinks = [
   object-fit: cover;
   object-position: center top;
   image-rendering: pixelated;
-}
-
-.link-list {
-  display: grid;
-  gap: 1rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.link-list li {
-  display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
-  align-items: start;
-  column-gap: 0.75rem;
-}
-
-.link-branch {
-  color: var(--text-muted);
-  width: 2.5rem;
-  flex: 0 0 auto;
-}
-
-.link-list a {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  min-height: 0;
-  padding: 0;
-  transition:
-    color 140ms ease;
-  color: var(--text-primary);
-  gap: 0.75rem;
-  min-width: 0;
-}
-
-.link-list a:hover,
-.link-list a:focus-visible {
-  color: var(--text-muted);
-}
-
-.link-label {
-  text-decoration: underline;
-  text-decoration-color: currentColor;
-  text-underline-offset: 0.25em;
-}
-
-.link-note {
-  color: var(--text-muted);
-  font-size: 1.5rem;
-}
-
-.link-item-personal .link-label {
-  color: var(--text-primary);
-}
-
-.link-item-personal .link-note {
-  color: var(--prompt-glyph);
-}
-
-.link-item-personal:hover .link-label,
-.link-item-personal:focus-visible .link-label {
-  color: var(--text-muted);
-}
-
-.link-item-personal:hover .link-note,
-.link-item-personal:focus-visible .link-note {
-  color: var(--text-primary);
 }
 
 .content-section :deep(h2),
