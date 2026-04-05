@@ -1,13 +1,7 @@
 :root {
   font-family:
-    "IBM Plex Mono",
-    "SFMono-Regular",
-    "SF Mono",
-    "Roboto Mono",
-    "Fira Code",
-    "Fira Mono",
-    "DejaVu Sans Mono",
-    monospace;
+    "IBM Plex Mono", "SFMono-Regular", "SF Mono", "Roboto Mono", "Fira Code",
+    "Fira Mono", "DejaVu Sans Mono", monospace;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: dark;
@@ -53,7 +47,7 @@ body {
 
 body::before,
 body::after {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -64,14 +58,24 @@ body::before {
   background:
     linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 100% 0.5rem, 0.5rem 100%;
+  background-size:
+    100% 0.5rem,
+    0.5rem 100%;
   opacity: 0.18;
 }
 
 body::after {
   background:
-    radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.05), transparent 24%),
-    radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.035), transparent 22%);
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(255, 255, 255, 0.05),
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(255, 255, 255, 0.035),
+      transparent 22%
+    );
   opacity: 0.6;
 }
 

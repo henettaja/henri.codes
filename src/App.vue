@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TypedIntro from './components/TypedIntro.vue'
 import { ref } from 'vue'
 import heroDithered from './assets/hero-portrait.png'
+import TypedIntro from './components/TypedIntro.vue'
 
 const activeTab = ref('about')
 
@@ -421,16 +421,6 @@ const profileLinks = [
   color: var(--text-muted);
 }
 
-.link-item-personal:hover .link-label,
-.link-item-personal:focus-visible .link-label {
-  color: var(--text-muted);
-}
-
-.link-item-personal:hover .link-note,
-.link-item-personal:focus-visible .link-note {
-  color: var(--text-primary);
-}
-
 .link-label {
   text-decoration: underline;
   text-decoration-color: currentColor;
@@ -448,6 +438,16 @@ const profileLinks = [
 
 .link-item-personal .link-note {
   color: var(--prompt-glyph);
+}
+
+.link-item-personal:hover .link-label,
+.link-item-personal:focus-visible .link-label {
+  color: var(--text-muted);
+}
+
+.link-item-personal:hover .link-note,
+.link-item-personal:focus-visible .link-note {
+  color: var(--text-primary);
 }
 
 .content-section :deep(h2),
