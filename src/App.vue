@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import heroDithered from './assets/hero-portrait.png'
+import HeroPromptSegments from './components/HeroPromptSegments.vue'
 import ProfileLinks from './components/ProfileLinks.vue'
 import ProfileModeSwitcher from './components/ProfileModeSwitcher.vue'
 import ProfileTabs from './components/ProfileTabs.vue'
@@ -169,16 +170,7 @@ onBeforeUnmount(() => {
 
       <div class="hero-copy-stage">
         <div class="hero-copy hero-copy-init" :class="{ 'is-hidden': isIntroReady }">
-          <div class="hero-prompt">
-            <span class="prompt-path">henri.codes </span>
-            <span class="prompt-connector">on </span>
-            <span class="prompt-branch">⎇ main </span>
-            <span class="prompt-connector">via </span>
-            <span class="prompt-node">
-              <span class="prompt-node-icon">⬢</span>
-              <span>24.14.1</span>
-            </span>
-          </div>
+          <HeroPromptSegments />
           <div class="command-stage" :class="{ 'has-second-line': isProcessingIntro }">
             <div class="hero-command">
               <span class="prompt-glyph">❯</span>
@@ -208,16 +200,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="hero-copy hero-copy-final" :class="{ 'is-visible': isIntroReady }">
-          <div class="hero-prompt">
-            <span class="prompt-path">henri.codes </span>
-            <span class="prompt-connector">on </span>
-            <span class="prompt-branch">⎇ main </span>
-            <span class="prompt-connector">via </span>
-            <span class="prompt-node">
-              <span class="prompt-node-icon">⬢</span>
-              <span>24.14.1</span>
-            </span>
-          </div>
+          <HeroPromptSegments />
           <div class="hero-command">
             <span class="prompt-glyph">❯</span>
             <TypedIntro
@@ -392,12 +375,6 @@ onBeforeUnmount(() => {
   transition-delay: v-bind(introExitFadeDelayDuration), 0ms;
 }
 
-.hero-prompt {
-  line-height: 1.4;
-  font-size: 2rem;
-  user-select: none;
-}
-
 .hero-command {
   display: flex;
   align-items: center;
@@ -417,35 +394,6 @@ onBeforeUnmount(() => {
   display: inline-block;
   width: 1ch;
   color: var(--prompt-glyph);
-}
-
-.prompt-path {
-  color: var(--prompt-path);
-  font-weight: 600;
-}
-
-.prompt-connector {
-  color: var(--text-primary);
-}
-
-.prompt-branch {
-  color: var(--prompt-branch);
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.prompt-node {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.35em;
-  color: var(--prompt-node);
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.prompt-node-icon {
-  font-size: 1.25em;
-  line-height: 1;
 }
 
 .hero-title {
