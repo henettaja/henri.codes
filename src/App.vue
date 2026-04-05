@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import heroDithered from './assets/hero-portrait.png'
 import ProfileLinks from './components/ProfileLinks.vue'
 import ProfileModeSwitcher from './components/ProfileModeSwitcher.vue'
@@ -10,8 +10,33 @@ import TypedIntro from './components/TypedIntro.vue'
 
 type ProfileMode = 'dev' | 'human'
 
+const introRevealMs = 360
+const introSwapOpacityMs = 500
+const introSwapTransformMs = 1000
+const introExitFadeDelayMs = 120
+const introProcessingMs = 520
+const introSecondLineRevealMs = 220
+const processingDotsCycleMs = 900
+const processingDotsStaggerMs = 120
+const helloStartDelayMs = Math.round(introSwapTransformMs * 0.22)
+const contentRevealDelayMs = introSwapTransformMs
+const portraitRevealDelayMs = contentRevealDelayMs + 120
+
+const introRevealDuration = `${introRevealMs}ms`
+const introSwapOpacityDuration = `${introSwapOpacityMs}ms`
+const introSwapTransformDuration = `${introSwapTransformMs}ms`
+const introExitFadeDelayDuration = `${introExitFadeDelayMs}ms`
+const introSecondLineRevealDuration = `${introSecondLineRevealMs}ms`
+const processingDotsCycleDuration = `${processingDotsCycleMs}ms`
+const processingDotsSecondDelay = `${processingDotsStaggerMs}ms`
+const processingDotsThirdDelay = `${processingDotsStaggerMs * 2}ms`
+const portraitRevealDelayDuration = `${portraitRevealDelayMs}ms`
+const contentRevealDelayDuration = `${contentRevealDelayMs}ms`
+
 const activeTab = ref('work')
 const activeMode = ref<ProfileMode>('dev')
+const isIntroReady = ref(false)
+const isProcessingIntro = ref(false)
 
 const modeOptions = [
   {
@@ -95,12 +120,44 @@ const profileLinks = [
     kind: 'personal',
   },
 ]
+
+let processingTimerId: number | null = null
+
+const handleInitComplete = () => {
+  if (isIntroReady.value) {
+    return
+  }
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    isIntroReady.value = true
+    return
+  }
+
+  isProcessingIntro.value = true
+
+  processingTimerId = window.setTimeout(() => {
+    isProcessingIntro.value = false
+    isIntroReady.value = true
+  }, introProcessingMs)
+}
+
+onMounted(() => {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    isIntroReady.value = true
+  }
+})
+
+onBeforeUnmount(() => {
+  if (processingTimerId !== null) {
+    window.clearTimeout(processingTimerId)
+  }
+})
 </script>
 
 <template>
   <main class="page-shell">
-    <section class="hero" aria-labelledby="intro-title">
-      <div class="hero-portrait">
+    <section class="hero" :class="{ 'is-ready': isIntroReady }" aria-label="Introduction">
+      <div class="hero-portrait" :class="{ 'is-visible': isIntroReady }" aria-hidden="true">
         <div class="portrait-frame hero-portrait-frame">
           <img
             class="portrait-image"
@@ -110,75 +167,126 @@ const profileLinks = [
         </div>
       </div>
 
-      <div class="hero-copy">
-        <div class="hero-prompt">
-          <span class="prompt-path">henri.codes</span>
-          <span class="prompt-connector">on</span>
-          <span class="prompt-branch">⎇ main</span>
-          <span class="prompt-connector">via</span>
-          <span class="prompt-node">
-            <span class="prompt-node-icon">⬢</span>
-            <span>24.14.1</span>
-          </span>
+      <div class="hero-copy-stage">
+        <div class="hero-copy hero-copy-init" :class="{ 'is-hidden': isIntroReady }">
+          <div class="hero-prompt">
+            <span class="prompt-path">henri.codes </span>
+            <span class="prompt-connector">on </span>
+            <span class="prompt-branch">⎇ main </span>
+            <span class="prompt-connector">via </span>
+            <span class="prompt-node">
+              <span class="prompt-node-icon">⬢</span>
+              <span>24.14.1</span>
+            </span>
+          </div>
+          <div class="command-stage" :class="{ 'has-second-line': isProcessingIntro }">
+            <div class="hero-command">
+              <span class="prompt-glyph">❯</span>
+              <TypedIntro
+                as="span"
+                class="hero-title"
+                text="./init_site.sh"
+                :step-ms="85"
+                @complete="handleInitComplete"
+              />
+            </div>
+            <div
+              class="hero-command command-slot-secondary"
+              :class="{ visible: isProcessingIntro }"
+            >
+              <span
+                v-if="isProcessingIntro"
+                class="processing-dots"
+                aria-hidden="true"
+              >
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="hero-command">
-          <span class="prompt-glyph">❯</span>
-          <TypedIntro
-            id="intro-title"
-            class="hero-title"
-            text="hello world!"
-          />
+
+        <div class="hero-copy hero-copy-final" :class="{ 'is-visible': isIntroReady }">
+          <div class="hero-prompt">
+            <span class="prompt-path">henri.codes </span>
+            <span class="prompt-connector">on </span>
+            <span class="prompt-branch">⎇ main </span>
+            <span class="prompt-connector">via </span>
+            <span class="prompt-node">
+              <span class="prompt-node-icon">⬢</span>
+              <span>24.14.1</span>
+            </span>
+          </div>
+          <div class="hero-command">
+            <span class="prompt-glyph">❯</span>
+            <TypedIntro
+              v-if="isIntroReady"
+              id="intro-title"
+              as="span"
+              class="hero-title"
+              text="hello world!"
+              :start-delay="helloStartDelayMs"
+              :step-ms="90"
+            />
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="content-area" aria-labelledby="info-title">
-      <div class="section-copy content-heading">
-        <div class="identity-panel" aria-label="Profile header">
-          <span class="identity-panel-label">whoami</span>
-          <div class="identity-panel-body">
-            <div class="heading-row">
-              <h2 id="info-title">henri_väisänen</h2>
-              <ProfileModeSwitcher
-                :active-mode="activeMode"
-                :mode-options="modeOptions"
-                @update:active-mode="activeMode = $event"
-              />
-            </div>
-            <p class="identity-tagline">
-              I write code I can stand behind, for causes I can stand behind.
-            </p>
-            <div class="identity-output">
-              <h3 class="identity-section-title">./summary</h3>
-              <div class="identity-detail-tree" aria-label="Profile details">
-                <TreeList>
-                  <TreeListItem
-                    v-for="([term, description], index) in profileDetails"
-                    :key="term"
-                    :is-last="index === profileDetails.length - 1"
-                  >
-                    <dl class="identity-detail-entry">
-                      <dt>{{ term }}</dt>
-                      <dd>{{ description }}</dd>
-                    </dl>
-                  </TreeListItem>
-                </TreeList>
+    <Transition name="intro-reveal">
+      <section
+        v-if="isIntroReady"
+        class="content-area"
+        aria-labelledby="info-title"
+      >
+        <div class="section-copy content-heading">
+          <div class="identity-panel" aria-label="Profile header">
+            <span class="identity-panel-label">whoami</span>
+            <div class="identity-panel-body">
+              <div class="heading-row">
+                <h2 id="info-title">henri_väisänen</h2>
+                <ProfileModeSwitcher
+                  :active-mode="activeMode"
+                  :mode-options="modeOptions"
+                  @update:active-mode="activeMode = $event"
+                />
+              </div>
+              <p class="identity-tagline">
+                I write code I can stand behind, for causes I can stand behind.
+              </p>
+              <div class="identity-output">
+                <h3 class="identity-section-title">./summary</h3>
+                <div class="identity-detail-tree" aria-label="Profile details">
+                  <TreeList>
+                    <TreeListItem
+                      v-for="([term, description], index) in profileDetails"
+                      :key="term"
+                      :is-last="index === profileDetails.length - 1"
+                    >
+                      <dl class="identity-detail-entry">
+                        <dt>{{ term }}</dt>
+                        <dd>{{ description }}</dd>
+                      </dl>
+                    </TreeListItem>
+                  </TreeList>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="content-grid" aria-label="Introduction">
-        <ProfileTabs
-          :active-tab="activeTab"
-          :sections="sectionsByMode[activeMode].sections"
-          @update:active-tab="activeTab = $event"
-        />
+        <div class="content-grid" aria-label="Introduction">
+          <ProfileTabs
+            :active-tab="activeTab"
+            :sections="sectionsByMode[activeMode].sections"
+            @update:active-tab="activeTab = $event"
+          />
 
-        <ProfileLinks :links="profileLinks" />
-      </div>
-    </section>
+          <ProfileLinks :links="profileLinks" />
+        </div>
+      </section>
+    </Transition>
   </main>
 </template>
 
@@ -190,7 +298,7 @@ const profileLinks = [
   gap: 6rem;
   width: min(147.5rem, calc(100% - 6rem));
   margin: 0 auto;
-  padding: 4.5rem 0 5rem;
+  padding: 2.5rem 0 4rem;
 }
 
 .hero {
@@ -202,10 +310,43 @@ const profileLinks = [
 
 .hero-portrait {
   display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(1rem);
+  transition:
+    opacity v-bind(introRevealDuration) ease,
+    transform v-bind(introRevealDuration) ease,
+    visibility 0s linear v-bind(introRevealDuration);
+  transition-delay:
+    v-bind(portraitRevealDelayDuration),
+    v-bind(portraitRevealDelayDuration),
+    calc(v-bind(portraitRevealDelayDuration) + v-bind(introRevealDuration));
+}
+
+.hero-portrait.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity v-bind(introRevealDuration) ease,
+    transform v-bind(introRevealDuration) ease,
+    visibility 0s linear 0s;
+  transition-delay:
+    v-bind(portraitRevealDelayDuration),
+    v-bind(portraitRevealDelayDuration),
+    v-bind(portraitRevealDelayDuration);
 }
 
 .hero-portrait-frame {
   width: min(100%, 22.5rem);
+}
+
+.hero-copy-stage {
+  position: relative;
+  min-height: 10rem;
+  padding: 2rem 0;
+  margin: -2rem 0;
+  overflow: visible;
 }
 
 .hero-copy {
@@ -214,10 +355,42 @@ const profileLinks = [
   align-content: center;
 }
 
+.hero-copy-init,
+.hero-copy-final {
+  position: absolute;
+  inset: 0;
+  transition-property: opacity, transform;
+  transition-duration:
+    v-bind(introSwapOpacityDuration),
+    v-bind(introSwapTransformDuration);
+  transition-timing-function: ease-in-out, ease-in-out;
+}
+
+.hero-copy-init {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-copy-init.is-hidden {
+  opacity: 0;
+  transform: translateY(-8rem);
+  transition-delay: v-bind(introExitFadeDelayDuration), 0ms;
+}
+
+.hero-copy-final {
+  opacity: 0;
+  transform: translateY(8rem);
+  transition-delay: 0ms, 0ms;
+}
+
+.hero-copy-final.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: v-bind(introExitFadeDelayDuration), 0ms;
+}
+
 .hero-prompt {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
+  line-height: 1.4;
   font-size: 2rem;
   user-select: none;
 }
@@ -255,14 +428,16 @@ const profileLinks = [
 .prompt-branch {
   color: var(--prompt-branch);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .prompt-node {
   display: inline-flex;
   align-items: baseline;
-  gap: 1rem;
+  gap: 0.35em;
   color: var(--prompt-node);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .prompt-node-icon {
@@ -276,9 +451,56 @@ const profileLinks = [
   text-transform: lowercase;
 }
 
-@media (min-width: 500px) {
-  .hero-title {
-    font-size: 2.5rem;
+.command-stage {
+  display: grid;
+  gap: 0.5rem;
+  min-height: 3rem;
+}
+
+.command-stage.has-second-line {
+  min-height: 6.5rem;
+}
+
+.command-slot-secondary {
+  opacity: 0;
+  transform: translateY(-0.4rem);
+  transition:
+    opacity v-bind(introSecondLineRevealDuration) ease,
+    transform v-bind(introSecondLineRevealDuration) ease;
+}
+
+.command-slot-secondary.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.processing-dots {
+  display: inline-flex;
+  gap: 0.1em;
+  margin-left: 0.2em;
+  color: var(--text-muted);
+}
+
+.processing-dots span {
+  animation: processing-dot v-bind(processingDotsCycleDuration) ease-in-out infinite;
+}
+
+.processing-dots span:nth-child(2) {
+  animation-delay: v-bind(processingDotsSecondDelay);
+}
+
+.processing-dots span:nth-child(3) {
+  animation-delay: v-bind(processingDotsThirdDelay);
+}
+
+@keyframes processing-dot {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
   }
 }
 
@@ -290,6 +512,25 @@ const profileLinks = [
 .content-area {
   display: grid;
   gap: 5rem;
+}
+
+.intro-reveal-enter-active {
+  transition:
+    opacity v-bind(introRevealDuration) ease,
+    transform v-bind(introRevealDuration) ease;
+  transition-delay: v-bind(contentRevealDelayDuration);
+}
+
+.intro-reveal-enter-from,
+.intro-reveal-leave-to {
+  opacity: 0;
+  transform: translateY(1rem);
+}
+
+.intro-reveal-enter-to,
+.intro-reveal-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .content-section {
@@ -391,7 +632,52 @@ const profileLinks = [
   image-rendering: pixelated;
 }
 
-@media (min-width: 500px) {
+@media (min-width: 500px) and (max-width: 799px) {
+  .hero-copy-stage {
+    min-height: 10rem;
+    padding: 1.5rem 0;
+    margin: -1.5rem 0;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero {
+    grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr);
+    gap: 4rem;
+    padding: 1rem 0 0.75rem;
+    min-height: 32vh;
+  }
+
+  .hero-portrait {
+    justify-content: flex-start;
+  }
+
+  .hero-portrait-frame {
+    width: min(100%, 22rem);
+  }
+
+  .hero-copy {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 800px) {
+  .page-shell {
+    gap: 5rem;
+    width: min(147.5rem, calc(100% - 12rem));
+    padding: 4.5rem 0 5rem;
+  }
+
+  .hero-copy-stage {
+    min-height: 10rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
   .hero {
     grid-template-columns: minmax(16.25rem, 23.75rem) minmax(0, 1fr);
     gap: 5rem;
@@ -410,13 +696,6 @@ const profileLinks = [
   .hero-copy {
     gap: 1rem;
   }
-}
-
-@media (min-width: 800px) {
-  .page-shell {
-    gap: 5rem;
-    width: min(147.5rem, calc(100% - 12rem));
-  }
 
   .content-grid {
     grid-template-columns: minmax(0, 1fr) minmax(26rem, 34rem);
@@ -426,6 +705,24 @@ const profileLinks = [
   .links-panel {
     align-content: start;
     min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-reveal-enter-active {
+    transition: none;
+  }
+
+  .hero-copy-init,
+  .hero-copy-final,
+  .hero-portrait,
+  .command-slot-secondary {
+    transition: none;
+  }
+
+  .processing-dots span {
+    animation: none;
+    opacity: 1;
   }
 }
 </style>
