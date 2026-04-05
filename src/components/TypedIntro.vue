@@ -98,10 +98,6 @@ onBeforeUnmount(() => {
   animation: blink 1s steps(1, end) infinite;
 }
 
-.cursor.complete {
-  margin-left: 0.14em;
-}
-
 @keyframes blink {
   0%,
   49% {

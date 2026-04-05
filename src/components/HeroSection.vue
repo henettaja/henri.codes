@@ -16,7 +16,8 @@ const emit = defineEmits<{
 const introSwapOpacityMs = 500
 const introSwapTransformMs = 1000
 const introExitFadeDelayMs = 120
-const introProcessingMs = 1180
+const introCommandPauseMs = 180
+const introProcessingMs = 1580
 const introSecondLineRevealMs = 220
 const processingSpinnerStepMs = 80
 const helloStartDelayMs = introSwapTransformMs + 500
@@ -37,7 +38,7 @@ const spinnerFrame = computed(() => spinnerFrames[spinnerFrameIndex.value] ?? sp
 
 let processingTimerId: number | null = null
 let spinnerTimerId: number | null = null
-
+let commandPauseTimerId: number | null = null
 const finishIntro = () => {
   if (isReady.value) {
     return
@@ -57,33 +58,43 @@ const handleInitComplete = () => {
     return
   }
 
-  isProcessing.value = true
-  spinnerFrameIndex.value = 0
+  commandPauseTimerId = window.setTimeout(() => {
+    isProcessing.value = true
+    spinnerFrameIndex.value = 0
 
-  spinnerTimerId = window.setInterval(() => {
-    spinnerFrameIndex.value =
-      (spinnerFrameIndex.value + 1) % spinnerFrames.length
-  }, processingSpinnerStepMs)
+    spinnerTimerId = window.setInterval(() => {
+      spinnerFrameIndex.value =
+        (spinnerFrameIndex.value + 1) % spinnerFrames.length
+    }, processingSpinnerStepMs)
 
-  processingTimerId = window.setTimeout(() => {
-    isProcessing.value = false
+    processingTimerId = window.setTimeout(() => {
+      isProcessing.value = false
 
-    if (spinnerTimerId !== null) {
-      window.clearInterval(spinnerTimerId)
-      spinnerTimerId = null
-    }
+      if (spinnerTimerId !== null) {
+        window.clearInterval(spinnerTimerId)
+        spinnerTimerId = null
+      }
 
-    finishIntro()
-  }, introProcessingMs)
+      finishIntro()
+    }, introProcessingMs)
+  }, introCommandPauseMs)
 }
 
 onMounted(() => {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const prefersReducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)',
+  ).matches
+
+  if (prefersReducedMotion) {
     finishIntro()
   }
 })
 
 onBeforeUnmount(() => {
+  if (commandPauseTimerId !== null) {
+    window.clearTimeout(commandPauseTimerId)
+  }
+
   if (processingTimerId !== null) {
     window.clearTimeout(processingTimerId)
   }
@@ -114,14 +125,14 @@ onBeforeUnmount(() => {
     <div class="hero-copy-stage">
       <div class="hero-copy hero-copy-init" :class="{ 'is-hidden': isReady }">
         <HeroPromptSegments />
-        <div class="command-stage" :class="{ 'has-second-line': isProcessing || isReady }">
+        <div class="command-stage">
           <div class="hero-command">
             <span class="prompt-glyph">❯</span>
             <TypedIntro
               as="span"
               class="hero-title"
               text="./init_site.sh"
-              :step-ms="85"
+              :step-ms="55"
               @complete="handleInitComplete"
             />
           </div>
@@ -227,6 +238,7 @@ onBeforeUnmount(() => {
 
 .hero-copy-final {
   opacity: 0;
+  padding-top: 0.75rem;
   transform: translateY(8rem);
   transition-delay: 0ms, 0ms;
 }
@@ -258,16 +270,15 @@ onBeforeUnmount(() => {
 }
 
 .command-stage {
-  display: grid;
-  gap: 0.5rem;
-  min-height: 3rem;
-}
-
-.command-stage.has-second-line {
-  min-height: 6.5rem;
+  position: relative;
+  display: block;
+  min-height: 5.1rem;
 }
 
 .command-slot-secondary {
+  position: absolute;
+  left: 0;
+  top: 3.75rem;
   opacity: 0;
   transform: translateY(-0.4rem);
   transition:
