@@ -143,13 +143,15 @@ const profileLinks = [
 
     <section class="content-area" aria-labelledby="info-title">
       <div class="section-copy content-heading">
-        <h2 id="info-title">henri_väisänen</h2>
+        <div class="heading-row">
+          <h2 id="info-title">henri_väisänen</h2>
+          <ProfileModeSwitcher
+            :active-mode="activeMode"
+            :mode-options="modeOptions"
+            @update:active-mode="activeMode = $event"
+          />
+        </div>
         <p>I write code I can stand behind, for causes I can stand behind.</p>
-        <ProfileModeSwitcher
-          :active-mode="activeMode"
-          :mode-options="modeOptions"
-          @update:active-mode="activeMode = $event"
-        />
       </div>
 
       <div class="content-grid" aria-label="Introduction">
@@ -269,6 +271,13 @@ const profileLinks = [
 .section-copy {
   display: grid;
   gap: 1.25rem;
+}
+
+.heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 1rem 2rem;
 }
 
 .portrait-frame {
