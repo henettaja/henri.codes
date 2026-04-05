@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import HeroPromptSegments from './HeroPromptSegments.vue'
 import TypedIntro from './TypedIntro.vue'
 
@@ -17,10 +17,9 @@ const introRevealMs = 360
 const introSwapOpacityMs = 500
 const introSwapTransformMs = 1000
 const introExitFadeDelayMs = 120
-const introProcessingMs = 680
+const introProcessingMs = 1180
 const introSecondLineRevealMs = 220
-const processingDotsCycleMs = 900
-const processingDotsStaggerMs = 120
+const processingSpinnerStepMs = 80
 const helloStartDelayMs = Math.round(introSwapTransformMs * 0.22)
 const contentRevealDelayMs = introSwapTransformMs
 const portraitRevealDelayMs = contentRevealDelayMs + 120
@@ -30,15 +29,17 @@ const introSwapOpacityDuration = `${introSwapOpacityMs}ms`
 const introSwapTransformDuration = `${introSwapTransformMs}ms`
 const introExitFadeDelayDuration = `${introExitFadeDelayMs}ms`
 const introSecondLineRevealDuration = `${introSecondLineRevealMs}ms`
-const processingDotsCycleDuration = `${processingDotsCycleMs}ms`
-const processingDotsSecondDelay = `${processingDotsStaggerMs}ms`
-const processingDotsThirdDelay = `${processingDotsStaggerMs * 2}ms`
 const portraitRevealDelayDuration = `${portraitRevealDelayMs}ms`
 
 const isReady = ref(false)
 const isProcessing = ref(false)
+const spinnerFrameIndex = ref(0)
+
+const spinnerFrames = ['⣾', '⣷', '⣯', '⣟', '⡿', '⢿', '⣻', '⣽']
+const spinnerFrame = computed(() => spinnerFrames[spinnerFrameIndex.value] ?? spinnerFrames[0])
 
 let processingTimerId: number | null = null
+let spinnerTimerId: number | null = null
 
 const finishIntro = () => {
   if (isReady.value) {
@@ -60,9 +61,21 @@ const handleInitComplete = () => {
   }
 
   isProcessing.value = true
+  spinnerFrameIndex.value = 0
+
+  spinnerTimerId = window.setInterval(() => {
+    spinnerFrameIndex.value =
+      (spinnerFrameIndex.value + 1) % spinnerFrames.length
+  }, processingSpinnerStepMs)
 
   processingTimerId = window.setTimeout(() => {
     isProcessing.value = false
+
+    if (spinnerTimerId !== null) {
+      window.clearInterval(spinnerTimerId)
+      spinnerTimerId = null
+    }
+
     finishIntro()
   }, introProcessingMs)
 }
@@ -76,6 +89,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (processingTimerId !== null) {
     window.clearTimeout(processingTimerId)
+  }
+
+  if (spinnerTimerId !== null) {
+    window.clearInterval(spinnerTimerId)
   }
 })
 </script>
@@ -117,13 +134,9 @@ onBeforeUnmount(() => {
           >
             <span
               v-if="isProcessing || isReady"
-              class="processing-dots"
+              class="processing-spinner"
               aria-hidden="true"
-            >
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
-            </span>
+            >{{ spinnerFrame }}</span>
           </div>
         </div>
       </div>
@@ -281,34 +294,14 @@ onBeforeUnmount(() => {
   transform: translateY(0);
 }
 
-.processing-dots {
+.processing-spinner {
   display: inline-flex;
-  gap: 0.1em;
-  margin-left: 0.2em;
+  align-items: center;
+  justify-content: center;
+  width: 1ch;
+  aspect-ratio: 1;
   color: var(--text-muted);
-}
-
-.processing-dots span {
-  animation: processing-dot v-bind(processingDotsCycleDuration) ease-in-out infinite;
-}
-
-.processing-dots span:nth-child(2) {
-  animation-delay: v-bind(processingDotsSecondDelay);
-}
-
-.processing-dots span:nth-child(3) {
-  animation-delay: v-bind(processingDotsThirdDelay);
-}
-
-@keyframes processing-dot {
-  0%,
-  100% {
-    opacity: 0.3;
-  }
-
-  50% {
-    opacity: 1;
-  }
+  line-height: 1;
 }
 
 .portrait-frame {
@@ -391,11 +384,6 @@ onBeforeUnmount(() => {
   .hero-portrait,
   .command-slot-secondary {
     transition: none;
-  }
-
-  .processing-dots span {
-    animation: none;
-    opacity: 1;
   }
 }
 </style>
