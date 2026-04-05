@@ -143,15 +143,20 @@ const profileLinks = [
 
     <section class="content-area" aria-labelledby="info-title">
       <div class="section-copy content-heading">
-        <div class="heading-row">
-          <h2 id="info-title">henri_väisänen</h2>
-          <ProfileModeSwitcher
-            :active-mode="activeMode"
-            :mode-options="modeOptions"
-            @update:active-mode="activeMode = $event"
-          />
+        <div class="identity-panel" aria-label="Profile header">
+          <span class="identity-panel-label">whoami</span>
+          <div class="identity-panel-body">
+            <div class="heading-row">
+              <h2 id="info-title">henri_väisänen</h2>
+              <ProfileModeSwitcher
+                :active-mode="activeMode"
+                :mode-options="modeOptions"
+                @update:active-mode="activeMode = $event"
+              />
+            </div>
+            <p>I write code I can stand behind, for causes I can stand behind.</p>
+          </div>
         </div>
-        <p>I write code I can stand behind, for causes I can stand behind.</p>
       </div>
 
       <div class="content-grid" aria-label="Introduction">
@@ -271,6 +276,38 @@ const profileLinks = [
 .section-copy {
   display: grid;
   gap: 1.25rem;
+}
+
+.identity-panel {
+  position: relative;
+  display: inline-block;
+  justify-self: start;
+  width: fit-content;
+  max-width: 100%;
+  padding: 1.6rem 1.4rem 1.4rem;
+  border: 1px solid var(--panel-border-strong);
+  border-radius: 1.4rem;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.025) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+}
+
+.identity-panel-body {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.identity-panel-label {
+  position: absolute;
+  top: 0;
+  left: 1.2rem;
+  transform: translateY(-50%);
+  padding: 0 0.75rem;
+  background: var(--bg);
+  color: var(--text-muted);
+  line-height: 1;
 }
 
 .heading-row {

@@ -45,10 +45,9 @@ const emit = defineEmits<{
           <li
             v-for="([term, description], index) in section.details"
             :key="term"
+            :class="{ 'is-last': index === section.details.length - 1 }"
           >
-            <span class="detail-branch" aria-hidden="true">
-              {{ index === section.details.length - 1 ? '└─' : '├─' }}
-            </span>
+            <span class="detail-branch" aria-hidden="true"></span>
             <dl class="detail-entry">
               <dt>{{ term }}</dt>
               <dd>{{ description }}</dd>
@@ -126,6 +125,7 @@ const emit = defineEmits<{
 }
 
 .detail-list li {
+  position: relative;
   display: grid;
   grid-template-columns: 2.5rem minmax(0, 1fr);
   align-items: start;
@@ -133,9 +133,34 @@ const emit = defineEmits<{
 }
 
 .detail-branch {
-  color: var(--text-muted);
+  position: relative;
   width: 2.5rem;
-  flex: 0 0 auto;
+  min-height: 100%;
+}
+
+.detail-branch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0.7rem;
+  width: 1px;
+  background: var(--text-muted);
+}
+
+.detail-branch::after {
+  content: '';
+  position: absolute;
+  top: 1.1rem;
+  left: 0.7rem;
+  width: 1rem;
+  height: 1px;
+  background: var(--text-muted);
+}
+
+.detail-list li.is-last .detail-branch::before {
+  bottom: auto;
+  height: 1.1rem;
 }
 
 .detail-entry {
