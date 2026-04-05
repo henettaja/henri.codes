@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import TreeList from './TreeList.vue'
-import TreeListItem from './TreeListItem.vue'
-
 defineProps<{
   activeTab: string
   sections: ReadonlyArray<{
@@ -9,7 +6,6 @@ defineProps<{
     label: string
     title: string
     body: string
-    details: ReadonlyArray<readonly [string, string]>
   }>
 }>()
 
@@ -43,20 +39,6 @@ const emit = defineEmits<{
       role="tabpanel"
     >
       <h3>{{ section.title }}</h3>
-      <div v-if="section.details.length" class="detail-tree" aria-label="Details">
-        <TreeList>
-          <TreeListItem
-            v-for="([term, description], index) in section.details"
-            :key="term"
-            :is-last="index === section.details.length - 1"
-          >
-            <dl class="detail-entry">
-              <dt>{{ term }}</dt>
-              <dd>{{ description }}</dd>
-            </dl>
-          </TreeListItem>
-        </TreeList>
-      </div>
       <p>{{ section.body }}</p>
     </div>
   </article>
@@ -110,25 +92,5 @@ const emit = defineEmits<{
 
 .tab-panel h3 {
   font-size: 2.5rem;
-}
-
-.detail-tree {
-  margin-top: 0.75rem;
-}
-
-.detail-entry {
-  display: grid;
-  grid-template-columns: 9.5rem minmax(0, 1fr);
-  gap: 3rem;
-  margin: 0;
-}
-
-.detail-entry dt {
-  color: var(--text-muted);
-}
-
-.detail-entry dd {
-  margin: 0;
-  color: var(--text-primary);
 }
 </style>

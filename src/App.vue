@@ -4,11 +4,13 @@ import heroDithered from './assets/hero-portrait.png'
 import ProfileLinks from './components/ProfileLinks.vue'
 import ProfileModeSwitcher from './components/ProfileModeSwitcher.vue'
 import ProfileTabs from './components/ProfileTabs.vue'
+import TreeList from './components/TreeList.vue'
+import TreeListItem from './components/TreeListItem.vue'
 import TypedIntro from './components/TypedIntro.vue'
 
 type ProfileMode = 'dev' | 'human'
 
-const activeTab = ref('about')
+const activeTab = ref('work')
 const activeMode = ref<ProfileMode>('dev')
 
 const modeOptions = [
@@ -22,20 +24,15 @@ const modeOptions = [
   },
 ] as const
 
+const profileDetails = [
+  ['profile', 'frontend focused full-stack developer'],
+  ['focus', 'TypeScript-based stacks'],
+  ['location', 'Helsinki'],
+] as const
+
 const sectionsByMode = {
   dev: {
     sections: [
-      {
-        id: 'about',
-        label: './about',
-        title: '',
-        body: '',
-        details: [
-          ['profile', 'frontend focused full-stack developer'],
-          ['focus', 'TypeScript-based stacks'],
-          ['location', 'Helsinki'],
-        ],
-      },
       {
         id: 'work',
         label: './work.txt',
@@ -54,17 +51,6 @@ const sectionsByMode = {
   },
   human: {
     sections: [
-      {
-        id: 'about',
-        label: './about',
-        title: '',
-        body: '',
-        details: [
-          ['profile', 'frontend focused full-stack developer'],
-          ['focus', 'TypeScript-based stacks'],
-          ['location', 'Helsinki'],
-        ],
-      },
       {
         id: 'work',
         label: './work.txt',
@@ -159,7 +145,26 @@ const profileLinks = [
                 @update:active-mode="activeMode = $event"
               />
             </div>
-            <p>I write code I can stand behind, for causes I can stand behind.</p>
+            <p class="identity-tagline">
+              I write code I can stand behind, for causes I can stand behind.
+            </p>
+            <div class="identity-output">
+              <h3 class="identity-section-title">./summary</h3>
+              <div class="identity-detail-tree" aria-label="Profile details">
+                <TreeList>
+                  <TreeListItem
+                    v-for="([term, description], index) in profileDetails"
+                    :key="term"
+                    :is-last="index === profileDetails.length - 1"
+                  >
+                    <dl class="identity-detail-entry">
+                      <dt>{{ term }}</dt>
+                      <dd>{{ description }}</dd>
+                    </dl>
+                  </TreeListItem>
+                </TreeList>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -304,7 +309,7 @@ const profileLinks = [
   justify-self: start;
   width: fit-content;
   max-width: 100%;
-  padding: 1.6rem 1.4rem 1.4rem;
+  padding: 2rem 1.4rem 1.4rem;
   border: 1px solid var(--panel-border-strong);
   border-radius: 1.4rem;
   background: linear-gradient(
@@ -317,6 +322,41 @@ const profileLinks = [
 .identity-panel-body {
   display: grid;
   gap: 1.25rem;
+}
+
+.identity-tagline {
+  color: var(--text-primary);
+}
+
+.identity-detail-tree {
+  margin-top: 0.25rem;
+}
+
+.identity-output {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.identity-section-title {
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  font-weight: 500;
+}
+
+.identity-detail-entry {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 3rem;
+  margin: 0;
+}
+
+.identity-detail-entry dt {
+  color: var(--text-muted);
+}
+
+.identity-detail-entry dd {
+  margin: 0;
+  color: var(--text-primary);
 }
 
 .identity-panel-label {
