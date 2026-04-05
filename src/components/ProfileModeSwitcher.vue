@@ -16,6 +16,7 @@ const emit = defineEmits<{
 
 <template>
   <div class="mode-switcher" role="group" aria-label="Language mode">
+    <span class="mode-switcher-bracket" aria-hidden="true">[</span>
     <span class="mode-switcher-label">lang:</span>
     <button
       v-for="(mode, index) in modeOptions"
@@ -25,7 +26,7 @@ const emit = defineEmits<{
       :aria-pressed="activeMode === mode.id"
       @click="emit('update:activeMode', mode.id)"
     >
-      <span>{{ mode.label }}</span>
+      <span class="mode-button-label">{{ mode.label }}</span>
       <span
         v-if="index < modeOptions.length - 1"
         class="mode-divider"
@@ -34,6 +35,7 @@ const emit = defineEmits<{
         |
       </span>
     </button>
+    <span class="mode-switcher-bracket" aria-hidden="true">]</span>
   </div>
 </template>
 
@@ -44,10 +46,15 @@ const emit = defineEmits<{
   align-items: center;
   gap: 0.75rem;
   color: var(--text-muted);
+  animation: reveal-mode-switch 420ms cubic-bezier(0.2, 0.8, 0.2, 1) 420ms both;
 }
 
 .mode-switcher-label {
   color: var(--text-muted);
+}
+
+.mode-switcher-bracket {
+  color: var(--panel-border-strong);
 }
 
 .mode-button {
@@ -57,7 +64,7 @@ const emit = defineEmits<{
   border: 0;
   padding: 0;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   cursor: pointer;
   transition: color 140ms ease;
 }
@@ -68,7 +75,38 @@ const emit = defineEmits<{
   color: var(--text-primary);
 }
 
+.mode-button-label {
+  transition: text-decoration-color 140ms ease;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.22em;
+}
+
+.mode-button:hover .mode-button-label,
+.mode-button:focus-visible .mode-button-label,
+.mode-button.active .mode-button-label {
+  text-decoration-color: currentColor;
+}
+
 .mode-divider {
   color: var(--text-muted);
+}
+
+@keyframes reveal-mode-switch {
+  from {
+    opacity: 0;
+    transform: translateY(0.3rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mode-switcher {
+    animation: none;
+  }
 }
 </style>
