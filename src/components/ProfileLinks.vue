@@ -22,15 +22,18 @@ defineProps<{
           :key="link.href"
           :is-last="index === links.length - 1"
         >
-        <a
-          :href="link.href"
-          target="_blank"
-          rel="noreferrer"
-          :class="['link-item', `link-item-${link.kind}`]"
-        >
-          <span class="link-label">{{ link.label }}</span>
-          <span class="link-note">{{ link.note }}</span>
-        </a>
+          <a
+            :href="link.href"
+            target="_blank"
+            rel="noreferrer"
+            :class="['link-item', `link-item-${link.kind}`]"
+          >
+            <span class="link-label">
+              <span class="link-label-text">{{ link.label }}</span>
+              <span class="link-arrow" aria-hidden="true">↗</span>
+            </span>
+            <span class="link-note">{{ link.note }}</span>
+          </a>
         </TreeListItem>
       </TreeList>
     </div>
@@ -70,9 +73,21 @@ defineProps<{
 }
 
 .link-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.link-label-text {
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-underline-offset: 0.25em;
+}
+
+.link-arrow {
+  font-size: 0.9em;
+  opacity: 0.72;
+  transform: translateY(0.055em);
 }
 
 .link-note {
