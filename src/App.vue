@@ -14,7 +14,7 @@ const introRevealMs = 360
 const introSwapOpacityMs = 500
 const introSwapTransformMs = 1000
 const introExitFadeDelayMs = 120
-const introProcessingMs = 520
+const introProcessingMs = 680
 const introSecondLineRevealMs = 220
 const processingDotsCycleMs = 900
 const processingDotsStaggerMs = 120
@@ -292,6 +292,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .page-shell {
+  --content-inset: 1.4rem;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -353,6 +354,8 @@ onBeforeUnmount(() => {
   display: grid;
   gap: 0.5rem;
   align-content: center;
+  box-sizing: border-box;
+  padding-left: var(--content-inset);
 }
 
 .hero-copy-init,
@@ -507,6 +510,7 @@ onBeforeUnmount(() => {
 .content-grid {
   display: grid;
   gap: 4rem;
+  padding-left: var(--content-inset);
 }
 
 .content-area {
