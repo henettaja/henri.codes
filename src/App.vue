@@ -128,7 +128,7 @@ const profileLinks = [
         <div class="hero-prompt">
           <span class="prompt-path">henri.codes</span>
           <span class="prompt-connector">on</span>
-          <span class="prompt-branch">main</span>
+          <span class="prompt-branch"> main</span>
         </div>
         <div class="hero-command">
           <span class="prompt-glyph">❯</span>
@@ -264,7 +264,7 @@ const profileLinks = [
 
 .content-area {
   display: grid;
-  gap: 2rem;
+  gap: 5rem;
 }
 
 .content-section {
