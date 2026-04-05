@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import TreeList from './TreeList.vue'
+import TreeListItem from './TreeListItem.vue'
+
 defineProps<{
   activeTab: string
   sections: ReadonlyArray<{
@@ -41,19 +44,18 @@ const emit = defineEmits<{
     >
       <h3>{{ section.title }}</h3>
       <div v-if="section.details.length" class="detail-tree" aria-label="Details">
-        <ul class="detail-list">
-          <li
+        <TreeList>
+          <TreeListItem
             v-for="([term, description], index) in section.details"
             :key="term"
-            :class="{ 'is-last': index === section.details.length - 1 }"
+            :is-last="index === section.details.length - 1"
           >
-            <span class="detail-branch" aria-hidden="true"></span>
             <dl class="detail-entry">
               <dt>{{ term }}</dt>
               <dd>{{ description }}</dd>
             </dl>
-          </li>
-        </ul>
+          </TreeListItem>
+        </TreeList>
       </div>
       <p>{{ section.body }}</p>
     </div>
@@ -111,56 +113,7 @@ const emit = defineEmits<{
 }
 
 .detail-tree {
-  display: grid;
-  gap: 1rem;
   margin-top: 0.75rem;
-}
-
-.detail-list {
-  display: grid;
-  gap: 1rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.detail-list li {
-  position: relative;
-  display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
-  align-items: start;
-  column-gap: 0.75rem;
-}
-
-.detail-branch {
-  position: relative;
-  width: 2.5rem;
-  min-height: 100%;
-}
-
-.detail-branch::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0.7rem;
-  width: 1px;
-  background: var(--text-muted);
-}
-
-.detail-branch::after {
-  content: '';
-  position: absolute;
-  top: 1.1rem;
-  left: 0.7rem;
-  width: 1rem;
-  height: 1px;
-  background: var(--text-muted);
-}
-
-.detail-list li.is-last .detail-branch::before {
-  bottom: auto;
-  height: 1.1rem;
 }
 
 .detail-entry {
@@ -168,7 +121,6 @@ const emit = defineEmits<{
   grid-template-columns: 9.5rem minmax(0, 1fr);
   gap: 3rem;
   margin: 0;
-  min-width: 0;
 }
 
 .detail-entry dt {

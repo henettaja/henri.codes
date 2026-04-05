@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import TreeList from './TreeList.vue'
+import TreeListItem from './TreeListItem.vue'
+
 defineProps<{
   links: ReadonlyArray<{
     href: string
@@ -13,22 +16,23 @@ defineProps<{
   <aside class="content-section links-panel" aria-labelledby="links-title">
     <h2 id="links-title">./elsewhere</h2>
     <div class="link-tree" aria-label="Links">
-      <ul class="link-list">
-        <li v-for="(link, index) in links" :key="link.href">
-          <span class="link-branch" aria-hidden="true">
-            {{ index === links.length - 1 ? '└─' : '├─' }}
-          </span>
-          <a
-            :href="link.href"
-            target="_blank"
-            rel="noreferrer"
-            :class="['link-item', `link-item-${link.kind}`]"
-          >
-            <span class="link-label">{{ link.label }}</span>
-            <span class="link-note">{{ link.note }}</span>
-          </a>
-        </li>
-      </ul>
+      <TreeList>
+        <TreeListItem
+          v-for="(link, index) in links"
+          :key="link.href"
+          :is-last="index === links.length - 1"
+        >
+        <a
+          :href="link.href"
+          target="_blank"
+          rel="noreferrer"
+          :class="['link-item', `link-item-${link.kind}`]"
+        >
+          <span class="link-label">{{ link.label }}</span>
+          <span class="link-note">{{ link.note }}</span>
+        </a>
+        </TreeListItem>
+      </TreeList>
     </div>
   </aside>
 </template>
@@ -41,47 +45,23 @@ defineProps<{
 }
 
 .link-tree {
-  display: grid;
-  gap: 1rem;
   margin-top: 1rem;
 }
-
-.link-list {
-  display: grid;
-  gap: 1rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.link-list li {
-  display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
-  align-items: start;
-  column-gap: 0.75rem;
-}
-
-.link-branch {
-  color: var(--text-muted);
-  width: 2.5rem;
-  flex: 0 0 auto;
-}
-
-.link-list a {
+.link-item {
   display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
   min-height: 0;
   padding: 0;
   transition: color 140ms ease;
-  color: var(--text-primary);
+  color: var(--text-secondary);
   gap: 0.75rem;
   min-width: 0;
 }
 
-.link-list a:hover,
-.link-list a:focus-visible {
-  color: var(--text-muted);
+.link-item:hover,
+.link-item:focus-visible {
+  color: var(--text-primary);
 }
 
 .link-label {
@@ -99,8 +79,26 @@ defineProps<{
   color: var(--text-primary);
 }
 
+.link-item-primary .link-label {
+  color: var(--text-primary);
+}
+
 .link-item-personal .link-note {
   color: var(--prompt-glyph);
+}
+
+.link-item-primary .link-note {
+  color: var(--text-muted);
+}
+
+.link-item-primary:hover .link-label,
+.link-item-primary:focus-visible .link-label {
+  color: var(--text-muted);
+}
+
+.link-item-primary:hover .link-note,
+.link-item-primary:focus-visible .link-note {
+  color: var(--text-primary);
 }
 
 .link-item-personal:hover .link-label,
