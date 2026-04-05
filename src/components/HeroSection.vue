@@ -13,18 +13,15 @@ const emit = defineEmits<{
   ready: []
 }>()
 
-const introRevealMs = 360
 const introSwapOpacityMs = 500
 const introSwapTransformMs = 1000
 const introExitFadeDelayMs = 120
 const introProcessingMs = 1180
 const introSecondLineRevealMs = 220
 const processingSpinnerStepMs = 80
-const helloStartDelayMs = Math.round(introSwapTransformMs * 0.22)
-const contentRevealDelayMs = introSwapTransformMs
-const portraitRevealDelayMs = contentRevealDelayMs + 120
+const helloStartDelayMs = introSwapTransformMs + 500
+const portraitRevealDelayMs = introSwapTransformMs + 500
 
-const introRevealDuration = `${introRevealMs}ms`
 const introSwapOpacityDuration = `${introSwapOpacityMs}ms`
 const introSwapTransformDuration = `${introSwapTransformMs}ms`
 const introExitFadeDelayDuration = `${introExitFadeDelayMs}ms`
@@ -170,35 +167,24 @@ onBeforeUnmount(() => {
 
 .hero-portrait {
   display: flex;
-  opacity: 0;
   visibility: hidden;
-  transform: translateY(1rem);
-  transition:
-    opacity v-bind(introRevealDuration) ease,
-    transform v-bind(introRevealDuration) ease,
-    visibility 0s linear v-bind(introRevealDuration);
-  transition-delay:
-    v-bind(portraitRevealDelayDuration),
-    v-bind(portraitRevealDelayDuration),
-    calc(v-bind(portraitRevealDelayDuration) + v-bind(introRevealDuration));
 }
 
 .hero-portrait.is-visible {
-  opacity: 1;
   visibility: visible;
-  transform: translateY(0);
-  transition:
-    opacity v-bind(introRevealDuration) ease,
-    transform v-bind(introRevealDuration) ease,
-    visibility 0s linear 0s;
-  transition-delay:
-    v-bind(portraitRevealDelayDuration),
-    v-bind(portraitRevealDelayDuration),
-    v-bind(portraitRevealDelayDuration);
 }
 
 .hero-portrait-frame {
   width: min(100%, 22.5rem);
+  opacity: 0;
+  filter: brightness(1.4) contrast(1.08);
+}
+
+.hero-portrait.is-visible .hero-portrait-frame {
+  animation:
+    portrait-flicker 2600ms linear v-bind(portraitRevealDelayDuration) 1 both,
+    portrait-glow-settle 2700ms ease-out v-bind(portraitRevealDelayDuration) 1
+      both;
 }
 
 .hero-copy-stage {
@@ -318,6 +304,87 @@ onBeforeUnmount(() => {
   image-rendering: pixelated;
 }
 
+@keyframes portrait-flicker {
+  0% {
+    opacity: 0;
+    filter: brightness(1.75) contrast(1.15);
+  }
+
+  4% {
+    opacity: 0.58;
+    filter: brightness(0.5) contrast(1.02);
+  }
+
+  9% {
+    opacity: 0.04;
+    filter: brightness(1.95) contrast(1.22);
+  }
+
+  15% {
+    opacity: 0.92;
+    filter: brightness(0.84) contrast(1.06);
+  }
+
+  19% {
+    opacity: 0.2;
+    filter: brightness(1.42) contrast(1.15);
+  }
+
+  28% {
+    opacity: 0.98;
+    filter: brightness(0.88) contrast(1.05);
+  }
+
+  35% {
+    opacity: 0.62;
+    filter: brightness(1.16) contrast(1.08);
+  }
+
+  43% {
+    opacity: 0.86;
+    filter: brightness(0.95) contrast(1.03);
+  }
+
+  52% {
+    opacity: 0.18;
+    filter: brightness(1.36) contrast(1.12);
+  }
+
+  63% {
+    opacity: 1;
+    filter: brightness(0.91) contrast(1.02);
+  }
+
+  71% {
+    opacity: 0.74;
+    filter: brightness(1.08) contrast(1.04);
+  }
+
+  82% {
+    opacity: 0.96;
+    filter: brightness(0.98) contrast(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    filter: brightness(1) contrast(1);
+  }
+}
+
+@keyframes portrait-glow-settle {
+  0% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+
+  18% {
+    box-shadow: 0 0 2.4rem rgba(255, 255, 255, 0.08);
+  }
+
+  100% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
 @media (min-width: 500px) and (max-width: 799px) {
   .hero-copy-stage {
     min-height: 10rem;
@@ -384,6 +451,10 @@ onBeforeUnmount(() => {
   .hero-portrait,
   .command-slot-secondary {
     transition: none;
+  }
+
+  .hero-portrait.is-visible .hero-portrait-frame {
+    animation: none;
   }
 }
 </style>

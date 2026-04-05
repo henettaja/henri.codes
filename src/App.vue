@@ -10,9 +10,9 @@ import TreeListItem from './components/TreeListItem.vue'
 
 type ProfileMode = 'dev' | 'human'
 
-const introRevealMs = 360
-const introSwapTransformMs = 1000
-const contentRevealDelayMs = introSwapTransformMs
+const introRevealMs = 1000
+const introRevealDistance = '8rem'
+const contentRevealDelayMs = 0
 
 const introRevealDuration = `${introRevealMs}ms`
 const contentRevealDelayDuration = `${contentRevealDelayMs}ms`
@@ -195,15 +195,15 @@ const profileLinks = [
 
 .intro-reveal-enter-active {
   transition:
-    opacity v-bind(introRevealDuration) ease,
-    transform v-bind(introRevealDuration) ease;
+    opacity v-bind(introRevealDuration) ease-in-out,
+    transform v-bind(introRevealDuration) ease-in-out;
   transition-delay: v-bind(contentRevealDelayDuration);
 }
 
 .intro-reveal-enter-from,
 .intro-reveal-leave-to {
   opacity: 0;
-  transform: translateY(1rem);
+  transform: translateY(v-bind(introRevealDistance));
 }
 
 .intro-reveal-enter-to,
