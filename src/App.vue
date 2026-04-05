@@ -128,7 +128,12 @@ const profileLinks = [
         <div class="hero-prompt">
           <span class="prompt-path">henri.codes</span>
           <span class="prompt-connector">on</span>
-          <span class="prompt-branch"> main</span>
+          <span class="prompt-branch">⎇ main</span>
+          <span class="prompt-connector">via</span>
+          <span class="prompt-node">
+            <span class="prompt-node-icon">⬢</span>
+            <span>24.14.1</span>
+          </span>
         </div>
         <div class="hero-command">
           <span class="prompt-glyph">❯</span>
@@ -235,14 +240,29 @@ const profileLinks = [
 
 .prompt-path {
   color: var(--prompt-path);
+  font-weight: 600;
 }
 
 .prompt-connector {
-  color: var(--text-muted);
+  color: var(--text-primary);
 }
 
 .prompt-branch {
   color: var(--prompt-branch);
+  font-weight: 600;
+}
+
+.prompt-node {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1rem;
+  color: var(--prompt-node);
+  font-weight: 600;
+}
+
+.prompt-node-icon {
+  font-size: 1.25em;
+  line-height: 1;
 }
 
 .hero-title {

@@ -21,9 +21,10 @@
   --text-muted: rgba(255, 255, 255, 0.52);
   --accent-soft: rgba(255, 255, 255, 0.16);
   --selection: rgba(255, 255, 255, 0.18);
-  --prompt-glyph: #8be9fd;
-  --prompt-path: #50fa7b;
-  --prompt-branch: #ffb86c;
+  --prompt-glyph: #a9d98a;
+  --prompt-node: #a9d98a;
+  --prompt-path: #76d1c5;
+  --prompt-branch: #fb9be7;
 }
 
 html {
