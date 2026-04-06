@@ -19,7 +19,7 @@ const introRevealDuration = `${introRevealMs}ms`
 const contentRevealDelayDuration = `${contentRevealDelayMs}ms`
 
 const activeTab = ref('work')
-const activeMode = ref<ProfileMode>('dev')
+const activeMode = ref<ProfileMode>('human')
 const isIntroReady = ref(false)
 
 const modeOptions = [
