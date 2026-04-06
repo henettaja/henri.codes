@@ -13,6 +13,7 @@ type ProfileMode = 'dev' | 'human'
 const introRevealMs = 1000
 const introRevealDistance = '8rem'
 const contentRevealDelayMs = 0
+const modeSwitcherRevealDelayMs = introRevealMs + 320
 
 const introRevealDuration = `${introRevealMs}ms`
 const contentRevealDelayDuration = `${contentRevealDelayMs}ms`
@@ -129,6 +130,7 @@ const profileLinks = [
                 <ProfileModeSwitcher
                   :active-mode="activeMode"
                   :mode-options="modeOptions"
+                  :reveal-delay-ms="modeSwitcherRevealDelayMs"
                   @update:active-mode="activeMode = $event"
                 />
               </div>

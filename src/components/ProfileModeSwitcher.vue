@@ -1,13 +1,16 @@
 <script setup lang="ts">
 type ProfileMode = 'dev' | 'human'
 
-defineProps<{
+const props = defineProps<{
   activeMode: ProfileMode
   modeOptions: ReadonlyArray<{
     id: ProfileMode
     label: string
   }>
+  revealDelayMs: number
 }>()
+
+const revealDelayDuration = `${props.revealDelayMs}ms`
 
 const emit = defineEmits<{
   'update:activeMode': [mode: ProfileMode]
@@ -46,7 +49,7 @@ const emit = defineEmits<{
   align-items: center;
   gap: 0.75rem;
   color: var(--text-muted);
-  animation: reveal-mode-switch 420ms cubic-bezier(0.2, 0.8, 0.2, 1) 420ms both;
+  animation: reveal-mode-switch 420ms ease v-bind(revealDelayDuration) both;
 }
 
 .mode-switcher-label {
