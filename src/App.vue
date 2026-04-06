@@ -45,7 +45,7 @@ const sectionsByMode = {
         id: 'work',
         label: './work.txt',
         title: '',
-        body: 'Modern monorepositories, declarative, reactive and functional paradigms, and projects that aim to leave the world better than they found it make me nod with approval. I enjoy the challenge of figuring out the right technical structure for each scenario, whether that means a local implementation choice or the shape of a larger system. I believe product quality and code quality are inseparable.',
+        body: 'Modern monorepositories, declarative, reactive and functional paradigms, and projects that aim to leave the world better than they found it make me nod with approval. I enjoy the challenge of figuring out the right technical structure for each scenario, whether that means a local implementation choice or the shape of a larger system. I’ve seen how painful things can get when that is overlooked. I believe product quality and code quality are inseparable.',
         details: [],
       },
       {
