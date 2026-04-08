@@ -64,7 +64,7 @@ const sectionsByMode = {
         id: 'work',
         label: './work.txt',
         title: '',
-        body: 'I build and maintain production applications in client projects, focusing on maintainable front-end architecture. I’ve contributed across the stack and worked directly with clients to deliver production systems while taking ownership of technical direction. I see technical quality as part of delivering a better product, not as a separate concern. I’m especially drawn to projects that aim to leave the world better than they found it. I’m also regularly thanked for enjoyable collaboration by non-technical clients.',
+        body: 'I build and maintain production applications for public and societally significant clients, focusing on maintainable front-end architecture. I contribute across the tech stack and work directly with client teams, taking ownership of technical direction. I see technical quality as part of delivering a better product, not as a separate concern. I’m especially drawn to projects that aim to leave the world better than they found it. I’m also regularly thanked for enjoyable collaboration by non-technical clients.',
         details: [],
       },
       {
