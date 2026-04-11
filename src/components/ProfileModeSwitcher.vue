@@ -19,7 +19,6 @@ const emit = defineEmits<{
 
 <template>
   <div class="mode-switcher" role="group" aria-label="Language mode">
-    <span class="mode-switcher-bracket" aria-hidden="true">[</span>
     <span class="mode-switcher-label">lang:</span>
     <button
       v-for="(mode, index) in modeOptions"
@@ -38,7 +37,6 @@ const emit = defineEmits<{
         |
       </span>
     </button>
-    <span class="mode-switcher-bracket" aria-hidden="true">]</span>
   </div>
 </template>
 
@@ -48,16 +46,22 @@ const emit = defineEmits<{
   flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.72rem 2.3rem;
+  border: 1px solid var(--panel-border-strong);
+  border-radius: 1.2rem;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.025) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
   color: var(--text-muted);
   animation: reveal-mode-switch 420ms ease v-bind(revealDelayDuration) both;
 }
 
 .mode-switcher-label {
   color: var(--text-muted);
-}
-
-.mode-switcher-bracket {
-  color: var(--panel-border-strong);
 }
 
 .mode-button {

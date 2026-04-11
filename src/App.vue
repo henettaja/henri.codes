@@ -125,15 +125,7 @@ const profileLinks = [
           <div class="identity-panel" aria-label="Profile header">
             <span class="identity-panel-label">whoami</span>
             <div class="identity-panel-body">
-              <div class="heading-row">
-                <h2 id="info-title">henri_väisänen</h2>
-                <ProfileModeSwitcher
-                  :active-mode="activeMode"
-                  :mode-options="modeOptions"
-                  :reveal-delay-ms="modeSwitcherRevealDelayMs"
-                  @update:active-mode="activeMode = $event"
-                />
-              </div>
+              <h2 id="info-title">henri_väisänen</h2>
               <p class="identity-tagline">
                 I write code I can stand behind, for causes I can stand behind.
               </p>
@@ -163,7 +155,16 @@ const profileLinks = [
             :active-tab="activeTab"
             :sections="sectionsByMode[activeMode].sections"
             @update:active-tab="activeTab = $event"
-          />
+          >
+            <template #actions>
+              <ProfileModeSwitcher
+                :active-mode="activeMode"
+                :mode-options="modeOptions"
+                :reveal-delay-ms="modeSwitcherRevealDelayMs"
+                @update:active-mode="activeMode = $event"
+              />
+            </template>
+          </ProfileTabs>
 
           <ProfileLinks :links="profileLinks" />
         </div>
@@ -290,13 +291,6 @@ const profileLinks = [
   background: var(--bg);
   color: var(--prompt-path);
   line-height: 1;
-}
-
-.heading-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 1rem 2rem;
 }
 
 @media (min-width: 800px) {

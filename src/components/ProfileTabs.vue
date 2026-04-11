@@ -16,19 +16,24 @@ const emit = defineEmits<{
 
 <template>
   <article class="content-section content-tabs">
-    <div class="tab-list" role="tablist" aria-label="Profile sections">
-      <button
-        v-for="section in sections"
-        :key="section.id"
-        :class="['tab-button', { active: activeTab === section.id }]"
-        :aria-selected="activeTab === section.id"
-        :tabindex="activeTab === section.id ? 0 : -1"
-        role="tab"
-        type="button"
-        @click="emit('update:activeTab', section.id)"
-      >
-        {{ section.label }}
-      </button>
+    <div class="tab-row">
+      <div class="tab-list" role="tablist" aria-label="Profile sections">
+        <button
+          v-for="section in sections"
+          :key="section.id"
+          :class="['tab-button', { active: activeTab === section.id }]"
+          :aria-selected="activeTab === section.id"
+          role="tab"
+          type="button"
+          @click="emit('update:activeTab', section.id)"
+        >
+          {{ section.label }}
+        </button>
+      </div>
+
+      <div v-if="$slots.actions" class="tab-actions">
+        <slot name="actions" />
+      </div>
     </div>
 
     <div
@@ -55,10 +60,22 @@ const emit = defineEmits<{
   align-content: start;
 }
 
+.tab-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 1.25rem 3rem;
+}
+
 .tab-list {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
+}
+
+.tab-actions {
+  display: flex;
+  flex: 0 0 auto;
 }
 
 .tab-button {
