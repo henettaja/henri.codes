@@ -440,7 +440,7 @@ onBeforeUnmount(() => {
     grid-template-columns: minmax(16.25rem, 23.75rem) minmax(0, 1fr);
     gap: 5rem;
     padding: 2.5rem 0 1.5rem;
-    min-height: 42vh;
+    min-height: 38;
   }
 
   .hero-portrait {

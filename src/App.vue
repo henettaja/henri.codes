@@ -71,7 +71,7 @@ const sectionsByMode = {
         id: 'approach',
         label: './approach.txt',
         title: '',
-        body: 'I love working with teams that make calculated decisions through open discussion, even friendly debate. It cultivates clarity and trust, which leads to better collaboration and a better product. I thrive in environments where ambition, curiosity, and technical taste are taken seriously.',
+        body: 'I love working with teams that make calculated decisions through open discussion, even friendly debate. It cultivates clarity and trust, which leads to better collaboration and a better product. I thrive in environments where ambition, curiosity, and technical quality are taken seriously.',
         details: [],
       },
     ],
