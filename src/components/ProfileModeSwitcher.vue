@@ -32,27 +32,10 @@ const emit = defineEmits<{
       :aria-pressed="activeMode === mode.id"
       @click="emit('update:activeMode', mode.id)"
     >
-      <span
-        :class="[
-          'mode-button-label',
-          mode.id === 'dev' ? 'mode-button-label-dev' : '',
-        ]"
-      >
-        <span
-          v-if="mode.id === 'dev'"
-          class="mode-button-glitch mode-button-glitch-left"
-          aria-hidden="true"
-        >
+      <span class="mode-button-label">
+        <span class="mode-button-label-text" :data-text="mode.label">
           {{ mode.label }}
         </span>
-        <span
-          v-if="mode.id === 'dev'"
-          class="mode-button-glitch mode-button-glitch-right"
-          aria-hidden="true"
-        >
-          {{ mode.label }}
-        </span>
-        <span class="mode-button-label-text">{{ mode.label }}</span>
       </span>
       <span
         v-if="index < modeOptions.length - 1"
@@ -116,7 +99,7 @@ const emit = defineEmits<{
   text-underline-offset: 0.22em;
 }
 
-.mode-button-label-dev {
+.mode-button-dev .mode-button-label {
   isolation: isolate;
   overflow: hidden;
   padding: 0.18em 0.28em 0.22em;
@@ -128,23 +111,27 @@ const emit = defineEmits<{
   position: relative;
   z-index: 1;
 }
-.mode-button-glitch {
+
+.mode-button-dev .mode-button-label-text::before,
+.mode-button-dev .mode-button-label-text::after {
+  content: attr(data-text) / '';
   position: absolute;
   inset: 0;
+  z-index: -1;
   opacity: 0;
   pointer-events: none;
   mix-blend-mode: screen;
 }
 
-.mode-button-glitch-left {
+.mode-button-dev .mode-button-label-text::before {
   color: rgba(114, 255, 214, 1);
 }
 
-.mode-button-glitch-right {
+.mode-button-dev .mode-button-label-text::after {
   color: rgba(255, 108, 169, 0.96);
 }
 
-.mode-button-label-dev::after {
+.mode-button-dev .mode-button-label::after {
   content: '';
   position: absolute;
   left: -18%;
@@ -179,18 +166,18 @@ const emit = defineEmits<{
     0.12em 0 0 rgba(255, 108, 169, 0.42);
 }
 
-.mode-button-dev:hover .mode-button-glitch-left,
-.mode-button-dev:focus-visible .mode-button-glitch-left {
+.mode-button-dev:hover .mode-button-label-text::before,
+.mode-button-dev:focus-visible .mode-button-label-text::before {
   animation: dev-glitch-left 967ms steps(2, end) -610ms infinite;
 }
 
-.mode-button-dev:hover .mode-button-glitch-right,
-.mode-button-dev:focus-visible .mode-button-glitch-right {
+.mode-button-dev:hover .mode-button-label-text::after,
+.mode-button-dev:focus-visible .mode-button-label-text::after {
   animation: dev-glitch-right 787ms steps(2, end) -350ms infinite;
 }
 
-.mode-button-dev:hover .mode-button-label-dev::after,
-.mode-button-dev:focus-visible .mode-button-label-dev::after {
+.mode-button-dev:hover .mode-button-label::after,
+.mode-button-dev:focus-visible .mode-button-label::after {
   animation: dev-scanline 1597ms linear -900ms infinite;
 }
 
@@ -432,10 +419,12 @@ const emit = defineEmits<{
 
   .mode-button-dev:hover .mode-button-label-text,
   .mode-button-dev:focus-visible .mode-button-label-text,
-  .mode-button-dev:hover .mode-button-glitch,
-  .mode-button-dev:focus-visible .mode-button-glitch,
-  .mode-button-dev:hover .mode-button-label-dev::after,
-  .mode-button-dev:focus-visible .mode-button-label-dev::after {
+  .mode-button-dev:hover .mode-button-label-text::before,
+  .mode-button-dev:focus-visible .mode-button-label-text::before,
+  .mode-button-dev:hover .mode-button-label-text::after,
+  .mode-button-dev:focus-visible .mode-button-label-text::after,
+  .mode-button-dev:hover .mode-button-label::after,
+  .mode-button-dev:focus-visible .mode-button-label::after {
     animation: none;
   }
 }
