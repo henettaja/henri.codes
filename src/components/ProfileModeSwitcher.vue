@@ -428,4 +428,14 @@ const emit = defineEmits<{
     animation: none;
   }
 }
+
+@media (hover: none) {
+  .mode-button-dev:hover:not(:focus-visible) .mode-button-label-text,
+  .mode-button-dev:hover:not(:focus-visible) .mode-button-label-text::before,
+  .mode-button-dev:hover:not(:focus-visible) .mode-button-label-text::after,
+  .mode-button-dev:hover:not(:focus-visible) .mode-button-label::after {
+    animation: none;
+    text-shadow: none;
+  }
+}
 </style>
