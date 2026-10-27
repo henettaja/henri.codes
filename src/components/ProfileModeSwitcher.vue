@@ -161,9 +161,6 @@ const emit = defineEmits<{
 .mode-button-dev:hover .mode-button-label-text,
 .mode-button-dev:focus-visible .mode-button-label-text {
   animation: dev-glitch-base 2311ms step-end -280ms infinite;
-  text-shadow:
-    -0.12em 0 0 rgba(114, 255, 214, 0.5),
-    0.12em 0 0 rgba(255, 108, 169, 0.42);
 }
 
 .mode-button-dev:hover .mode-button-label-text::before,
@@ -418,7 +415,13 @@ const emit = defineEmits<{
   }
 
   .mode-button-dev:hover .mode-button-label-text,
-  .mode-button-dev:focus-visible .mode-button-label-text,
+  .mode-button-dev:focus-visible .mode-button-label-text {
+    animation: none;
+    text-shadow:
+      -0.12em 0 0 rgba(114, 255, 214, 0.5),
+      0.12em 0 0 rgba(255, 108, 169, 0.42);
+  }
+
   .mode-button-dev:hover .mode-button-label-text::before,
   .mode-button-dev:focus-visible .mode-button-label-text::before,
   .mode-button-dev:hover .mode-button-label-text::after,
